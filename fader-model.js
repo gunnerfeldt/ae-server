@@ -243,7 +243,6 @@ fader.prototype.touchFlags = function(flags) {
         this.touch = !(flags >> 1);
         var hlBankID = (this.base.bank * 8) + (this.id % 8);
         this.base.fader[hlBankID].touchBlink = this.touch;
-        console.log("TOUCH BLINK: " + this.touch + ", ID: " + hlBankID);
         remote.broadcast({
             "cmd": 0x33,
             "chn": hlBankID,
