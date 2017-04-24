@@ -48,15 +48,6 @@ function AutomanFaders(max) {
 }
 AutomanFaders.prototype.globalRelay = function(outBuf, broadcast) {
 
-    if (this.blink == 1) {
-        // what qframe slot is the control bank on?
-        var q = Math.floor(this.cBank / 3);
-        var id = ((((this.cBank * 8) % 24) + (this.blinkID % 8)) * 2) + 9;
-        // set blink bit
-        outBuf[q][id] = setBit(outBuf[q][id], 0x20);
-        // clear flag
-        this.blink = 0;
-    }
     if (this.bankSwitch == 1) {
         // what qframe slot is the control bank on?
         var q = Math.floor(this.cBank / 3);
@@ -66,13 +57,24 @@ AutomanFaders.prototype.globalRelay = function(outBuf, broadcast) {
             outBuf[q][8 + (i * 2) + idOffset] = (this.bank * 8) + i + 1;
             // set ID bit
             var id = 9 + (i * 2) + idOffset;
-            outBuf[q][id] = setBit(outBuf[q][id], 0x10);
+            outBuf[q][id] = 0x10;
         }
         broadcast({
             "cmd": 0x36,
             "bank": this.bank
         })
         this.bankSwitch = 0;
+    }
+    if (this.blink == 1) {
+        // what qframe slot is the control bank on?
+        var q = Math.floor(this.cBank / 3);
+        var id = ((((this.cBank * 8) % 24) + (this.blinkID % 8)) * 2);
+        // set blink bit
+        // Apparently IDs need to be set for blink as well
+        outBuf[q][id + 8] = this.blinkID + 1;
+        outBuf[q][id + 9] = 0x30;
+        // clear flag
+        this.blink = 0;
     }
 }
 AutomanFaders.prototype.settings = function(link) {
@@ -96,6 +98,7 @@ function fader(id) {
     this.status = 0;
     this.mute = 0;
     this.touch = 0;
+    this.touchBlink = 0;
     this.motor = 0;
     this.write = 0;
     this.writeLevel = 0;
@@ -151,7 +154,7 @@ fader.prototype.relay = function(mtc, automation) {
         } else {
             this.out = hlFader.in;
         }
-        // hui injection not used for now - make writes weird in HUI modes
+        // hui injection not used - make writes weird in HUI modes
         /*
         if (hlFader.hui != null) {
             if (hlFader.hui.mode == 1) {
@@ -161,6 +164,7 @@ fader.prototype.relay = function(mtc, automation) {
             }
         }
         */
+        // cBank touch should set a touch flag for the SSL fader
     }
     // The rest of the faders
     if (!hlBank && !cBank) {
@@ -204,7 +208,6 @@ fader.prototype.setIn = function(val) {
 fader.prototype.setTouch = function(val) {
     if (this.touch != val) {
         this.touch = val;
-        console.log("id: " + this.id + ", touch: " + val);
     }
 }
 
@@ -239,9 +242,11 @@ fader.prototype.touchFlags = function(flags) {
     if (flags != 0) {
         this.touch = !(flags >> 1);
         var hlBankID = (this.base.bank * 8) + (this.id % 8);
+        this.base.fader[hlBankID].touchBlink = this.touch;
+        console.log("TOUCH BLINK: " + this.touch + ", ID: " + hlBankID);
         remote.broadcast({
             "cmd": 0x33,
-            "chn": (this.base.bank * 8) + (this.id % 8),
+            "chn": hlBankID,
             "status": this.touch
         });
     }
@@ -334,6 +339,13 @@ fader.prototype.parseToBinary = function(outBuf) {
     // status
     outBuf[q][9 + (i * 2)] = (outBuf[q][9 + (i * 2)] & 0xF3) + ((this.status & 3) << 2);
     // mute
+    outBuf[q][9 + (i * 2)] = (outBuf[q][9 + (i * 2)] & 0x7F) + ((this.mute & 1) << 7);
+
+    if (this.touchBlink)
+        outBuf[q][9 + (i * 2)] = setBit(outBuf[q][9 + (i * 2)], 0x40);
+    else
+        outBuf[q][9 + (i * 2)] = clearBit(outBuf[q][9 + (i * 2)], 0x40);
+
     outBuf[q][9 + (i * 2)] = (outBuf[q][9 + (i * 2)] & 0x7F) + ((this.mute & 1) << 7);
 }
 

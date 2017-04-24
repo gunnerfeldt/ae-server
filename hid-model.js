@@ -72,12 +72,6 @@ function initHidLoop(device) {
         if (inBuf.length === 64) {
             var outBuf64 = parseCv96Data(inBuf, outBuf);
             cv96.write(outBuf64);
-            if ((outBuf64[1 & 3] == 3) && ((outBuf64[41] & 0x10) == 0x10)) {
-                console.log(outBuf64[40]);
-            }
-            if ((outBuf64[1 & 3] == 3) && ((outBuf64[41] & 0x20) == 0x20)) {
-                console.log("BLINK");
-            }
         }
     });
 }
