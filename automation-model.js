@@ -118,7 +118,8 @@ TrackClass.prototype.writeSync = function(mtc, fader) {
 
     } else if (recState == REC_STATE_WRITE) {
         this.writePoint(mtc.position, fader.writeLevel);
-        sendGuiPoints(fader.id, this.autoPts);
+        // must make a lighter real time gui draw
+        //    sendGuiPoints(fader.id, this.autoPts);
 
     } else if (recState == REC_STATE_DROP_OUT) {
         this.writePoint(mtc.position, fader.writeLevel);
