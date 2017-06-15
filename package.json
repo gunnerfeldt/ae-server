@@ -1,7 +1,7 @@
 {
     "name": "ae-server",
     "productName": "ae-server",
-    "version": "0.0.4",
+    "version": "0.0.225",
     "description": "",
     "main": "main.js",
     "scripts": {

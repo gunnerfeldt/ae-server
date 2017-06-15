@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 
 <head>
-    <title>SW96 Remote Dev 0.0.1</title>
+    <title>SW96 Remote (dev 0.0.225)</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="minimum-scale=0.25, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -394,7 +394,6 @@
 
                 client.on("addPoint", function(data) {
                     // cache mirrored auto points
-                    console.log(data);
                     if (data.position == 0) {
                         automation.autoPts[data.id] = {
                             "0": data.vca
@@ -412,6 +411,12 @@
                         }
                         automation.autoPts[data.id][data.position] = data.vca;
                     }
+                    var pkg = {
+                        points: automation.autoPts[data.id],
+                        track: data.id
+                    }
+                    drawTrackBuffer(pkg);
+                    timeLine.rePaintFlag = 1;
                 });
 
                 client.on("deletePoint", function(data) {

@@ -53,6 +53,33 @@ var faderKnob = [];
 var knobWhite;
 var knobRed;
 
+var tlBuf = null;
+
+function goTl() {
+    tlBuf.width = timeLine.width;
+    tlBuf.height = timeLine.trackHeight;
+    var tlctx = tlBuf.getContext('2d');
+
+    tlctx.beginPath();
+    tlctx.fillStyle = '#888';
+    tlctx.fillRect(0, 0, timeLine.width, timeLine.trackHeight);
+    tlctx.stroke();
+
+    tlctx.beginPath();
+    tlctx.lineWidth = "1";
+    tlctx.strokeStyle = '#323232';
+    tlctx.moveTo(0, 0);
+    tlctx.lineTo(timeLine.width - 1, 0);
+    tlctx.stroke();
+
+    tlctx.beginPath();
+    tlctx.lineWidth = "1";
+    tlctx.strokeStyle = '#aaa';
+    tlctx.moveTo(0, timeLine.trackHeight - 1);
+    tlctx.lineTo(timeLine.width - 1, timeLine.trackHeight - 1);
+    tlctx.stroke();
+}
+
 knobWhite = loadSprite('img/knobWhite.png',
     console.log("knob loaded")
 );
@@ -70,6 +97,7 @@ function loadSprite(src, callback) {
     sprite.src = src;
     return sprite;
 }
+
 
 function initAutomation() {
     trackBackground = drawTrackBackground();
@@ -91,30 +119,35 @@ function drawTimeline() {
 
 }
 
+
+var buffer;
+
 function drawTrackBackground() {
-    var buffer = document.createElement('canvas');
-    buffer.width = timeLine.width;
-    buffer.height = timeLine.trackHeight;
-    var ctx = buffer.getContext('2d');
+    if (buffer == null) {
+        buffer = document.createElement('canvas');
+        buffer.width = timeLine.width;
+        buffer.height = timeLine.trackHeight;
+        var ctx = buffer.getContext('2d');
 
-    ctx.beginPath();
-    ctx.fillStyle = '#888';
-    ctx.fillRect(0, 0, timeLine.width, timeLine.trackHeight);
-    ctx.stroke();
+        ctx.beginPath();
+        ctx.fillStyle = '#888';
+        ctx.fillRect(0, 0, timeLine.width, timeLine.trackHeight);
+        ctx.stroke();
 
-    ctx.beginPath();
-    ctx.lineWidth = "1";
-    ctx.strokeStyle = '#323232';
-    ctx.moveTo(0, 0);
-    ctx.lineTo(timeLine.width - 1, 0);
-    ctx.stroke();
+        ctx.beginPath();
+        ctx.lineWidth = "1";
+        ctx.strokeStyle = '#323232';
+        ctx.moveTo(0, 0);
+        ctx.lineTo(timeLine.width - 1, 0);
+        ctx.stroke();
 
-    ctx.beginPath();
-    ctx.lineWidth = "1";
-    ctx.strokeStyle = '#aaa';
-    ctx.moveTo(0, timeLine.trackHeight - 1);
-    ctx.lineTo(timeLine.width - 1, timeLine.trackHeight - 1);
-    ctx.stroke();
+        ctx.beginPath();
+        ctx.lineWidth = "1";
+        ctx.strokeStyle = '#aaa';
+        ctx.moveTo(0, timeLine.trackHeight - 1);
+        ctx.lineTo(timeLine.width - 1, timeLine.trackHeight - 1);
+        ctx.stroke();
+    }
     return buffer;
 }
 

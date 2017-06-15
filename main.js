@@ -2,7 +2,6 @@ const electron = require('electron');
 const { app, BrowserWindow } = electron;
 const Menu = electron.Menu;
 var rl = require("readline");
-var appWin;
 var remote96Win;
 var simWin = {};
 var fs = require('fs');
@@ -42,6 +41,14 @@ app.on('ready', function() {
     conf = engine.getConf();
     simWin = makeSimWindow();
     remote96Win = makeRemoteWindow();
+
+
+    simWin.on('close', function(e) {
+        console.log("CLOSE SIM WINDOW");
+        /* the user only tried to close the window */
+        //      e.preventDefault();
+        //    window.hide();
+    });
 
     // Exposed function to the app
     exports.call = function(obj) {
@@ -155,16 +162,19 @@ function makeRemoteWindow() {
 }
 
 function makeSimWindow() {
+    console.log("WHAT:");
+    console.log(conf);
+    conf.simWindow.show = 0;
     var win = new BrowserWindow({
         width: conf.simWindow.width,
         height: conf.simWindow.height,
-        show: conf.simWindow.width.show,
+        show: conf.simWindow.show,
         acceptFirstMouse: true,
         x: conf.simWindow.x,
         y: conf.simWindow.y
     });
     //    win.webContents.openDevTools();
-    win.loadURL(conf.simWindow.localUrl);
+    if (conf.simWindow.show) win.loadURL(conf.simWindow.localUrl);
     win.name = "simWindow";
     win.on("move", function(e) {
         var pos = win.getPosition();

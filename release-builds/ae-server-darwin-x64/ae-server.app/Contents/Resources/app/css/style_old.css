@@ -1,0 +1,1053 @@
+
+.ios8{
+    top: 20px;
+}
+.browser{
+    top: 0px;
+}
+
+body {
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    transform: translate3d(0,0,0);
+    font-family: arial;
+    text-align: center;
+    background-color: #000; 
+/*    padding-bottom: 40px;*/
+}
+
+#page{
+    margin: auto;
+    height:100%;
+    min-height: 100%;
+    position:relative;
+    min-width: 984px;
+    max-width: 1020px;
+}
+
+#app {
+    margin: auto;
+    background-color: #FFCC00; 
+    border-radius: 10px 10px 0 0;
+    height:100%;
+    overflow: hidden;
+    overflow-y:scroll;
+}
+::-webkit-scrollbar { 
+    display: none; 
+}
+
+header{
+    height: 60px;
+    margin-bottom: 6px;
+}
+#topCells{
+    display: table;
+    text-align: left; 
+    margin-left: 42px;
+    width: 100%;
+    margin-top: 9px;
+    height: 56px;
+    color: #333;
+}
+#buttonData{
+    width:206px;
+}
+
+
+#buttonRow td{
+    text-align: center;
+    width: 68px;
+    height: 47px;
+    color: #ffcc00;
+    background-color: #333;
+    cursor: pointer;
+}
+#infoCells{
+    width: 100%;
+    margin-left:-2px;
+    margin-right:-2px;
+}
+#lineTop {
+    background-color: #333;
+}
+
+#infoCells th, mtcCells th{
+    border: 1px #000;
+    height: 20%;
+    font-size: 11px;
+}
+.infoLabel{
+    padding-bottom: 0px; 
+    margin-left:2px;
+}
+#infoData{
+    height: 1.6em;
+}
+#infoCells td{   
+    font-size: 18px;
+    font-weight: 500;
+    background-color: #333;
+    color: #FFCC00;
+    padding-left:4px;
+    padding-top:6px;
+    padding-bottom:3px;
+}
+#mtcInfo{
+    max-width:18px;
+}
+#mtcInfo th{
+    height: 20%;
+    font-size: 11px;
+    padding-left:3px;
+}
+#mtcInfo td{
+    font-size: 18px;
+    font-weight: 500;
+    background-color: #333;
+    color: #FFCC00;
+    padding-left:4px;
+    padding-right:3px;
+    padding-top:2px;
+}
+#mtcData{
+    width: 250px;
+}
+#mtcInfoCells{
+    margin-left: -2px;
+}
+#mtcCells{
+    margin-left: -5px;
+    text-align: right;
+    background-color: #333;
+    padding: 0 5px 0 4px;
+    color: #FFCC00;
+}
+#mtcCells td{
+    font-size: 38px;
+    font-weight: 600;
+    text-align: left;
+    max-width: 0.5em;
+}
+#clockData{
+}
+
+#clock{
+    background: url('../img/clockBase.png') 0px 0px;
+    height: 52px;
+    width: 52px;
+    margin-right:3px;
+    margin-left:-7px;
+    margin-top:1px;
+    position: relative;
+}
+.clockPointers{
+    height: 52px;
+    width: 52px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    display: block;
+}
+#clockMin{
+    background: url('../img/clockMin.png') 0px 0px;
+}
+#clockSec{
+    background: url('../img/clockSec.png') 0px 0px;
+}
+#clockFrame{
+    background: url('../img/clockFrame.png') 0px 0px;
+}
+#version{
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    text-align: right;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+footer{
+    position: fixed;
+    bottom:0px;
+    margin: auto;
+}
+#banks{
+    min-width: 984px;
+    max-width: 1020px;
+    position: relative;
+    background-color: #000; 
+    display: table;
+    text-align: center; 
+    width:100%;
+    color: #333; 
+    font-size: 24px;
+    font-weight: 600;
+    table-layout:fixed;
+    margin: auto;
+}
+
+
+
+#logo{
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    cursor: pointer;
+}
+
+#sources{
+    display:none;
+}
+
+.bankButton{
+    padding-top: 6px;
+    display: table-cell;
+    position: relative;
+    min-height: 38px;
+    height: 32px;
+    text-align: center;
+    border-radius: 0 0 15px 15px;
+}
+.bankButtonNotFocus{
+    background-color: #777; 
+    border:1px solid #333;
+}
+.bankButtonFocus{
+    background-color: #FFCC00; 
+    border:1px solid #FFCC00;
+    border-top: none;
+}
+.bankButton:hover{
+    cursor: pointer;
+}
+
+#mainGUI{
+    text-align: center;
+}
+
+.channelStrip{
+    display: inline-block;
+    width:122px;
+    height:610px;
+    max-height:610px;
+    background-color: #333;
+    border:1px solid #777;
+    position: relative;
+    border-radius: 12px;
+    margin-left: -1px;
+}
+
+.chnNo{
+    background-color: #777; 
+    position: absolute;
+    bottom: 12px;
+    left: 14px;
+    min-height: 28px;
+    height: 34px;
+    width: 94px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.chnNo p{
+    color: #FFCC00; 
+    font-size: 28px;
+    text-align: center;
+    margin-top: 2px;
+    font-weight: 700;
+}
+
+
+
+/* automation */
+
+#autoWrapper {
+    position: absolute;
+    display: inline-block;
+    width: 990px;
+    height: 620px;
+    position: relative;
+    text-align: center;
+    line-height: 0px;
+    overflow: hidden;
+}
+#autoOverlay {
+    width: 600px;
+    height: 340px;
+    position: relative;
+    background-color: #666;
+    border: 2px solid #999;
+    left:-64px;
+    top:0px;
+    text-align: left;
+    line-height: 0px;
+    overflow: hidden;
+    z-index: 100;
+}
+#statusPalette1{
+    position: relative;
+    z-index: 0;
+    left: 20px;
+    top: 17px;
+}
+#statusPalette2{
+    position: relative;
+    z-index: 0;
+}
+#autoStatusWrapper {
+    position: absolute;
+    left:0px;
+    top:0px;
+    display: inline-block;
+    width: 130px;
+    height: 460px;
+    border: none;
+    overflow: hidden;
+}
+#autoStatusHeader {
+    display: inline-block;
+    width: 130px;
+    height: 21px;
+    background-color: #999;
+    border: none;
+    z-index: 10;
+}
+.zoomButton {
+    display: inline-block;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 1px;
+    margin-right: 1px;
+    width: 24px;
+    height: 17px;
+    background-color: #444;
+    border: 2px #999;
+    z-index: 11; 
+    color: #ffcc00; 
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 17px;
+    cursor: pointer;
+}
+#zoom3 {
+    background-color: #999;
+    color: #333; 
+}
+#autoStatusCrop {
+    position: absolute;
+    left:0px;
+    top:21px;
+    display: inline-block;
+    width: 130px;
+    height: 440px;
+    background-color: #ccc;
+    border: none;
+    z-index: 0;
+    overflow: hidden;
+}
+#autoStatuses {
+    position: absolute;
+    left:0px;
+    top:-1px;
+    display: inline-block;
+    width: 130px;
+    height: 440px;
+    background-color: #ccc;
+    border: none;
+    z-index: 0;
+}
+#autoTimelineWrapper {
+    position: absolute;
+    left:130px;
+    top:0px;
+    display: inline-block;
+    width: 860px;
+    height: 460px;
+    border: none;
+    line-height: 0px;
+}
+#autoRuler {
+}
+#autoTracksCrop {
+    position: absolute;
+    left:0px;
+    top:21px;
+    display: inline-block;
+    width: 860px;
+    height: 440px;
+    background-color: #DDD;
+    border: none;
+    overflow: hidden;
+}
+#autoTracks {
+    position: absolute;
+    left:0px;
+    top:0px;
+    display: inline-block;
+    width: 860px;
+    height: 440px;
+    background-color: #DDD;
+    border: none;
+}
+#autoFaders {
+    position: absolute;
+    left:0px;
+    top:460px;
+    display: inline-block;
+    width: 990px;
+    height: 160px;
+    background-color: #999;
+    border: none;
+    margin:0;
+}
+
+.statusBox{
+    position: relative;
+    z-index: 0;
+}
+.statusTrackNo{
+    position: absolute;
+    background-color: #555;
+    line-height: 1.8em;
+    color: #ffcc00; 
+    font-size: 30px;
+    font-weight: 600;
+    border: 1px solid #999;
+    z-index: 0;
+}
+.statusTrackStatus{
+    position: absolute;
+    background-color: #444;
+    border: 1px solid #999;
+    z-index: 0;
+    color: #555; 
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 27px;
+    
+}
+.statusTrackLevel{
+    position: absolute;
+    background-color: #555;
+    border: 1px solid #999;
+    z-index: 0;
+}
+
+.optionTrackStatus{
+    position: absolute;
+    background-color: #444;
+    border: 2px solid #999;
+    z-index: 0;
+    color: #999; 
+    padding-left: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 27px;
+    left: -2px;
+}
+#statusPaletteInfo{
+    position: absolute;
+    z-index: 0;
+    color: #DDD; 
+    padding-left: 8px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 10px;
+    left: 130px;
+    top: 6px;
+}
+
+.optionArrow{
+    position: absolute;
+    background-color: none;
+    border: none;
+    z-index: 101;
+    color: #999; 
+    padding-left: 0px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 27px;
+}
+.huiRoute{
+    position: absolute;
+    background-color: #444;
+    border: 2px solid #999;
+    z-index: 0;
+    color: #999; 
+    padding-left: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 27px;
+}
+.faderBank{
+    position: absolute;
+    display: inline-block;
+    width: 165px;
+    height: 159px;
+    margin:0;
+    background-color: #555;
+}
+#faderBankHighLite{
+    display: inline-block;
+    width: 165px;
+    height: 159px;
+    margin:0;
+    background-color: #999;
+}
+.fader{
+    position: absolute;
+    display: inline-block;
+    background-color: #555;
+    background: url('../img/faderBase.png') 0px 20px no-repeat;
+}
+.faderTrackNo {
+    background-color: #555;
+    color: #999; 
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+}
+.knob{
+    position: absolute;
+    display: inline-block;
+    
+}
+.knobWhite{
+    background: url('../img/knobWhite.png') 0px 0px;
+}
+.knobRed{
+    background: url('../img/knobRed.png') 0px 0px;
+}
+.knobGray{
+    background: url('../img/knobGray.png') 0px 0px;
+}
+
+#faderControlPanel{
+    position: absolute;
+    display: inline-block;
+    background-color: #555;
+    height: 159px;
+    width: 27px;
+    margin:0;
+    left:1px;
+    top:1px;
+}
+
+
+
+.routingSwitchOn{
+    background: url('img/routingSwitch.png') 18px 0;
+}
+.routingSwitchOff{
+    background: url('img/routingSwitch.png') 0px 0px;
+}
+
+.routingLed {
+    margin:8px;
+    margin-bottom:0px;
+    margin-top:-4px;
+}
+.routingLedTop {
+    margin:8px;
+    margin-bottom:0px;
+    margin-top:14px;
+}
+.routingSwitch {
+    margin:4px;
+    margin-top:-1px;
+    margin-bottom:-1px;
+}
+
+.knobPanRing {
+    position: absolute;
+    top: 478px;
+    left: 16px;
+}
+.knobPan{
+    position: absolute;
+    top: 482px;
+    left: 20px;
+}
+
+.buttPan{
+    position: absolute;
+    top: 492px;
+    left: 76px;
+}
+
+
+
+
+
+/*
+    Inputs & Dynamics 
+*/
+
+.knobLineRing {
+    position: absolute;
+    top: 42px;
+    left: 10px;
+}
+.knobLine{
+    position: absolute;
+    top: 46px;
+    left: 14px;
+}
+
+.knobMicRing {
+    position: absolute;
+    top: 106px;
+    left: 10px;
+}
+.knobMic{
+    position: absolute;
+    top: 110px;
+    left: 14px;
+}
+.buttFlip{
+    position: absolute;
+    top: 49px;
+    left: 76px;
+}
+.buttSub{
+    position: absolute;
+    top: 75px;
+    left: 76px;
+}
+.buttPhase{
+    position: absolute;
+    top: 101px;
+    left: 76px;
+}
+.butt48{
+    position: absolute;
+    top: 127px;
+    left: 76px;
+}
+
+
+
+.knobCompRatio {
+    position: absolute;
+    top: 232px;
+    left: 14px;
+}
+.knobCompRatioRing {
+    position: absolute;
+    top: 228px;
+    left: 10px;
+}
+.knobCompThres {
+    position: absolute;
+    top: 268px;
+    left: 74px;
+}
+.knobCompThresRing {
+    position: absolute;
+    top: 264px;
+    left: 70px;
+}
+
+.knobCompRel {
+    position: absolute;
+    top: 304px;
+    left: 14px;
+}
+.knobCompRelRing {
+    position: absolute;
+    top: 300px;
+    left: 10px;
+}
+.knobExpThres {
+    position: absolute;
+    top: 340px;
+    left: 74px;
+}
+.knobExpThresRing {
+    position: absolute;
+    top: 336px;
+    left: 70px;
+}
+.knobExpRange {
+    position: absolute;
+    top: 376px;
+    left: 14px;
+}
+.knobExpRangeRing {
+    position: absolute;
+    top: 372px;
+    left: 10px;
+}
+
+.knobExpRel {
+    position: absolute;
+    top: 442px;
+    left: 14px;
+}
+.knobExpRelRing {
+    position: absolute;
+    top: 438px;
+    left: 10px;
+}
+.buttLink {
+    position: absolute;
+    top: 226px;
+    left: 75px;
+}
+.buttGate {
+    position: absolute;
+    top: 402px;
+    left: 75px;
+}
+.buttDynChIn {
+    position: absolute;
+    top: 510px;
+    left: 15px;
+}
+.buttDynChOut {
+    position: absolute;
+    top: 510px;
+    left: 52px;
+}
+.buttDynMon {
+    position: absolute;
+    top: 510px;
+    left: 89px;
+}
+/* *** Pull Switches *** */
+
+.buttCompAttack {
+    position: absolute;
+    top: 296px;
+    left: 6px;
+    z-index: 10;
+}
+.buttExpAttack {
+    position: absolute;
+    top: 434px;
+    left: 6px;
+    z-index: 10;
+}
+
+
+
+
+
+
+.knobHP {
+    position: absolute;
+    top: 16px;
+    left: 74px;
+}.knobHPRing {
+    position: absolute;
+    top: 12px;
+    left: 70px;
+}
+.knobLP {
+    position: absolute;
+    top: 42px;
+    left: 14px;
+}
+.knobLPRing {
+    position: absolute;
+    top: 38px;
+    left: 10px;
+}
+
+.knobHFGain {
+    position: absolute;
+    top: 112px;
+    left: 14px;
+}
+.knobHFGainRing {
+    position: absolute;
+    top: 108px;
+    left: 10px;
+}
+.knobHF {
+    position: absolute;
+    top: 148px;
+    left: 74px;
+}
+.knobHFRing {
+    position: absolute;
+    top: 144px;
+    left: 70px;
+}
+
+.knobHMFGain {
+    position: absolute;
+    top: 184px;
+    left: 14px;
+}
+.knobHMFGainRing {
+    position: absolute;
+    top: 180px;
+    left: 10px;
+}
+.knobHMF {
+    position: absolute;
+    top: 220px;
+    left: 74px;
+}
+.knobHMFRing {
+    position: absolute;
+    top: 216px;
+    left: 70px;
+}
+.knobHMFQ {
+    position: absolute;
+    top: 256px;
+    left: 14px;
+}
+.knobHMFQRing {
+    position: absolute;
+    top: 252px;
+    left: 10px;
+}
+
+.knobLMFGain {
+    position: absolute;
+    top: 322px;
+    left: 14px;
+}
+.knobLMFGainRing {
+    position: absolute;
+    top: 318px;
+    left: 10px;
+}
+.knobLMF {
+    position: absolute;
+    top: 358px;
+    left: 74px;
+}
+.knobLMFRing {
+    position: absolute;
+    top: 354px;
+    left: 70px;
+}
+.knobLMFQ {
+    position: absolute;
+    top: 394px;
+    left: 14px;
+}
+.knobLMFQRing {
+    position: absolute;
+    top: 390px;
+    left: 10px;
+}
+
+.knobLFGain {
+    position: absolute;
+    top: 430px;
+    left: 74px;
+}
+.knobLFGainRing {
+    position: absolute;
+    top: 426px;
+    left: 70px;
+}
+.knobLF {
+    position: absolute;
+    top: 470px;
+    left: 14px;
+}
+.knobLFRing {
+    position: absolute;
+    top: 466px;
+    left: 10px;
+}
+.buttSplit {
+    position: absolute;
+    top: 72px;
+    left: 75px;
+}
+.buttHmfx3 {
+    position: absolute;
+    top: 106px;
+    left: 75px;
+}
+.buttEqPre {
+    position: absolute;
+    top: 282px;
+    left: 75px;
+}
+.buttEqIn {
+    position: absolute;
+    top: 312px;
+    left: 75px;
+}
+.buttLmfx3 {
+    position: absolute;
+    top: 490px;
+    left: 75px;
+}
+.buttEqChn {
+    position: absolute;
+    top: 520px;
+    left: 15px;
+}
+.buttEqDyn {
+    position: absolute;
+    top: 520px;
+    left: 52px;
+}
+.buttEqMon {
+    position: absolute;
+    top: 520px;
+    left: 89px;
+}
+
+
+#hiLite {
+    position: absolute;
+    top: 405px;
+    left: 70px;
+}
+
+
+/*
+#arrow {
+    position: absolute;
+    top: 10px;
+    left: -35px;
+}
+  */
+#slider1, #slider2
+{
+    width:8px; 
+    height:370px; 
+    margin-left: 45px;
+    float: left; 
+    background: none;
+    background-color: #333333;
+    border:1px black;
+}
+.ui-slider .ui-slider-handle {
+    width:40px; 
+    height:86px; 
+    background:url(../img/faderKnb.png) no-repeat; 
+    overflow: hidden;
+    position:absolute; 
+    border:none;
+    padding: 0px;
+    margin-left: -0.7em;
+    margin-bottom: -2.6em;
+  }
+  .ui-slider .ui-state-active {
+	border:none;
+}
+  .ui-slider .ui-state-highlight {
+	border:none;
+}
+  .ui-slider .ui-state-focus {
+	border:none;
+}
+
+
+
+#url {
+    width: 160px;
+}
+
+#bank, #chn {
+    width: 30px;
+}
+
+#header, #prefs, #faders, #wsMonitor{
+    background-color: black;
+    color: #FFCC00;
+     border-radius:1em;
+     margin: 1em;
+     padding: 1em;
+}
+
+#header{
+    text-align: center;
+}
+#prefs{
+    margin-top:-20px;
+    margin-bottom:-20px;
+}
+#faders{
+    display: inline-block;
+    max-height: 450px;
+    width: 200px;
+    margin-top: 0px;
+}
+
+#wsMonitor{
+    width: 10em;
+    margin-top: 0px;
+    float: left;
+}
+
+#wsMonitor tr{
+    width: 1em;
+}
+.msg{
+    width: 30px;
+}
+
+#leftPane, #rightPane {
+    width: 45%;
+}
+#leftPane {
+    background-color: gray;
+}
+#rightPane {
+    background-color: aqua;
+}
+
+.descr {
+}
+#wsPt {
+    text-align: left;
+    table-layout: fixed;
+}
+#th1, #th2{
+    min-width: 70px;
+}
+
+#th3{
+    min-width: 250px;
+}
+
+#con {
+    font-size: 30px;
+    min-width: 200px;
+}
+
+#c1 {
+    margin: 0;
+}
+
+.hidden {
+    display:none;
+}
+.show {
+    display:inline-block;
+}
+
+.watch {
+    position: fixed;
+    rigth: 20px;
+    top:20px;
+}
+
+.statusButton{
+    border: 2px solid #000;
+    background-color: #666;
+    width: 200px;
+    height: 28px;
+    cursor: pointer;
+}
+
+.chnId{
+    width: 30px;
+}
