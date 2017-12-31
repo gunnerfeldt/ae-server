@@ -88,6 +88,16 @@ function Hui(inCnt, outCnt) {
     Hui.prototype.getValue = function(port, chn) {
         return HUIin[port][chn];
     }
+    Hui.prototype.reset = function() {
+        for (var n = 0; n < 4; n++) {
+            for (var i = 0; i < 8; i++) {
+                HUIin[n] = [];
+                HUIin[n][i] = 0;
+                HUIinMute[n] = [];
+                HUIinMute[n][i] = 0;
+            }
+        }
+    }
 
 
 

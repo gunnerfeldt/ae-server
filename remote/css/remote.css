@@ -1,105 +1,112 @@
-
-::-webkit-scrollbar { 
-    display: none; 
+::-webkit-scrollbar {
+    display: none;
     font-family: arial;
 }
-
 
 body {
     position: absolute;
     font-family: arial;
     text-align: center;
-    background-color: #000; 
-    height:100%;
-    width:100%;
+    background-color: #000;
+    height: 100%;
+    width: 100%;
     margin: auto;
-  /*  max-width: 1020px; */
+    /*  max-width: 1020px; */
 }
+
 #app {
     position: relative;
     margin: auto;
-    background-color: #FFCC00; 
+    background-color: #FFCC00;
     border-radius: 10px 10px 0 0;
-    height:100%;
+    height: 100%;
     min-height: 728px;
     max-height: 748px;
-    width:100%;
+    width: 100%;
     min-width: 984px;
     max-width: 1010px;
     overflow: hidden;
-    overflow-y:scroll;
+    overflow-y: scroll;
 }
+
 #guiApp {
     position: relative;
     margin: auto;
-    background-color: #FFCC00; 
-    height:100%;
-    width:100%;
+    background-color: #FFCC00;
+    height: 100%;
+    width: 100%;
     overflow: hidden;
-    overflow-y:scroll;
+    overflow-y: scroll;
 }
-header{
+
+header {
     position: absolute;
-    top:0px;
-    width:100%;
+    top: 0px;
+    width: 100%;
     height: 68px;
 }
-#mainGUI{
+
+#mainGUI {
     position: absolute;
     margin: auto;
-    background-color: #FFCC00; 
-    width:100%;
-    top:68px;
+    background-color: #FFCC00;
+    width: 100%;
+    top: 68px;
     bottom: 40px;
     min-width: 1010px;
 }
+
 #defaultWrapper {
     height: 100%;
     margin: 0px 10px 0px 10px;
     text-align: center;
     overflow: hidden;
     background-color: #333;
-    border:1px solid #777;
+    border: 1px solid #777;
 }
-.defaultHeader{
+
+.defaultHeader {
     position: absolute;
     font-family: arial;
     font-size: 28px;
     font-weight: 600;
     color: #777;
-    padding-left:5px;
+    padding-left: 5px;
     text-align: left;
     border: none;
 }
-.defaultLabel{
+
+.defaultLabel {
     position: absolute;
     font-family: arial;
     font-size: 28px;
     font-weight: 400;
     color: #777;
-    padding-right:5px;
-    padding-top:4px;
+    padding-right: 5px;
+    padding-top: 4px;
     text-align: right;
     border: none;
 }
-.defaultInput{
+
+.defaultInput {
     position: absolute;
     font-family: arial;
     font-size: 28px;
     font-weight: 600;
     color: #999;
-    padding-left:5px;
+    padding-left: 5px;
     text-align: left;
     background: #444;
     border: none;
 }
-.defaultButton{
+
+.defaultButton {
     position: absolute;
     font-family: arial;
     font-size: 24px;
     font-weight: 600;
     color: #777;
-    padding-left:5px;
+    padding-left: 5px;
     text-align: left;
     background: #444;
     border: 2px #555 solid;
@@ -108,19 +115,22 @@ header{
     height: 34px;
     margin-top: 2px;
 }
-.defaultButton:hover{
+
+.defaultButton:hover {
     color: #333;
     background: #777;
     cursor: pointer;
     border: none;
 }
-footer{
+
+footer {
     position: absolute;
     height: 40px;
-    width:100%;
+    width: 100%;
     bottom: 0px;
     margin: auto;
 }
+
 
 /*
     html += '<div class="container style="left: 0px; top: 0px; width: 180px; height: 68px;">';
@@ -131,8 +141,7 @@ footer{
     html += '<div class="AEbuttonA" style="left: 0px; top: 0px; height; 24; width: 44px;">Options<div class="AEcorner"></div></div>';
 */
 
-
-#logo{
+#logo {
     position: absolute;
     left: 10px;
     top: 10px;
@@ -141,18 +150,22 @@ footer{
     height: 52px;
     background: url('../img/logoAll.png') 0px 0px;
 }
-.container{
+
+.container {
     position: absolute;
 }
-.AEline{
+
+.AEline {
     position: absolute;
     height: 2px;
     background: #323232;
 }
-.AEtext{
+
+.AEtext {
     position: absolute;
 }
-.AEbuttonA{
+
+.AEbuttonA {
     position: absolute;
     background: #323232;
     color: #FFCC00;
@@ -160,12 +173,14 @@ footer{
     text-align: left;
     font-weight: 600;
 }
-.AEbuttonA:hover{
+
+.AEbuttonA:hover {
     background: #999;
     color: #323232;
     cursor: pointer;
 }
-.AEbuttonB{
+
+.AEbuttonB {
     position: absolute;
     background: #323232;
     color: #FFCC00;
@@ -174,7 +189,8 @@ footer{
     font-weight: 600;
     overflow: hidden;
 }
-.AEcorner{
+
+.AEcorner {
     position: absolute;
     background: url('../img/foldedCorner.png') 0px 0px;
     width: 7px;
@@ -183,7 +199,7 @@ footer{
     right: 0;
 }
 
-#mtcPanel{
+#mtcPanel {
     position: absolute;
     top: 14px;
     right: 67px;
@@ -192,28 +208,33 @@ footer{
     border-radius: 6px;
     background: #323232;
 }
-#mtcCells{
+
+#mtcCells {
     position: absolute;
     right: 13px;
     text-align: right;
     color: #FFCC00;
 }
-#mtcCells td{
+
+#mtcCells td {
     font-weight: 600;
     text-align: center;
 }
-.mtcDigit{
+
+.mtcDigit {
     font-size: 38px;
     max-width: 0.43em;
 }
-.separator{
+
+.separator {
     position: relative;
     font-size: 30px;
     right: 1px;
     bottom: 2px;
     max-width: 4px;
 }
-#clock{
+
+#clock {
     position: absolute;
     top: 11px;
     right: 10px;
@@ -221,27 +242,32 @@ footer{
     height: 52px;
     width: 52px;
 }
-.clockPointers{
+
+.clockPointers {
     height: 52px;
     width: 52px;
     position: absolute;
     left: 0px;
     top: 0px;
 }
-#clockMin{
+
+#clockMin {
     background: url('../img/clockMin.png') 0px 0px;
 }
-#clockSec{
+
+#clockSec {
     background: url('../img/clockSec.png') 0px 0px;
 }
-#clockFrame{
+
+#clockFrame {
     background: url('../img/clockFrame.png') 0px 0px;
 }
-.hidden{
+
+.hidden {
     display: none;
 }
 
-#alertDiv{
+#alertDiv {
     font-family: arial;
     color: #bbb;
     text-align: center;
@@ -249,7 +275,8 @@ footer{
     font-size: 24px;
     line-height: 120px;
 }
-.menuList{
+
+.menuList {
     font-family: arial;
     width: auto;
     list-style: none;
@@ -259,27 +286,30 @@ footer{
     padding: 0px 0px 0px 0px;
     margin: 10px 0px 6px 0px;
 }
-.menuList li{
-}
-.menuList span{
+
+.menuList li {}
+
+.menuList span {
     position: relative;
     left: 0px;
     margin: 0px 15px 0px 10px;
 }
-.menuList .sep{
+
+.menuList .sep {
     width: 100%;
     height: 2px;
     background-color: #777;
     margin: 5px 0 5px 0;
-    padding:0;
+    padding: 0;
 }
-.menuList :not(.sep):hover{
+
+.menuList :not(.sep):hover {
     background: #999;
     color: #323232;
     cursor: pointer;
 }
 
-.statusMenuList{
+.statusMenuList {
     font-size: 14px;
     line-height: 18px;
     position: absolute;
@@ -294,39 +324,43 @@ footer{
     background: #444;
     box-shadow: 3px 3px 3px #323232;
 }
-.statusMenuList li{
+
+.statusMenuList li {
     font-size: 14px;
     line-height: 18px;
 }
+
 .statusMenuList li:nth-child(odd) {
-  background-color: #444;
+    background-color: #444;
 }
+
 .statusMenuList li:nth-child(even) {
-  background-color: #454545;
+    background-color: #454545;
 }
 
-
-.statusMenuList span{
+.statusMenuList span {
     position: relative;
     left: 0px;
     width: 100%;
     margin: 0px 0px 0px 0px;
-    padding:0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
 }
-.statusMenuList .sep{
+
+.statusMenuList .sep {
     width: 100%;
     height: 2px;
     background-color: #777;
     margin: 5px 0 5px 0px;
-    padding:0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
 }
-.statusMenuList :not(.sep):hover{
+
+.statusMenuList :not(.sep):hover {
     background: #999;
     color: #323232;
     cursor: pointer;
 }
 
-.aeButton{
+.aeButton {
     background: #DDD;
     border: solid 2px #777;
     border-radius: 10px;
@@ -335,17 +369,18 @@ footer{
     font-size: 16px;
     font-weight: 600;
     color: #333;
-    padding-left:10px;
-    padding-right:10px;
-    padding-top:19px;
-    padding-bottom:17px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 19px;
+    padding-bottom: 17px;
     margin-left: 2px;
     margin-right: 2px;
     min-width: 80px;
     text-align: center;
     cursor: pointer;
 }
-.alertButton{
+
+.alertButton {
     background: #777;
     border: solid 2px #888;
     border-radius: 10px;
@@ -354,10 +389,10 @@ footer{
     font-size: 24px;
     font-weight: 600;
     color: #333;
-    padding-left:10px;
-    padding-right:10px;
-    padding-top:0px;
-    padding-bottom:0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
     margin-left: 4px;
     margin-right: 4px;
     min-width: 80px;
@@ -366,29 +401,30 @@ footer{
     cursor: pointer;
 }
 
+
 /**********
 
 Recall
 
 
 **/
-#banks{
+
+#banks {
     min-width: 984px;
     max-width: 1020px;
     position: relative;
-    background-color: #000; 
+    background-color: #000;
     display: table;
-    text-align: center; 
-    width:100%;
-    color: #333; 
+    text-align: center;
+    width: 100%;
+    color: #333;
     font-size: 24px;
     font-weight: 600;
-    table-layout:fixed;
+    table-layout: fixed;
     margin: auto;
 }
 
-
-.bankButton{
+.bankButton {
     padding-top: 6px;
     display: table-cell;
     position: relative;
@@ -396,55 +432,64 @@ Recall
     height: 32px;
     text-align: center;
     border-radius: 0 0 15px 15px;
-    background-color: #777; 
-    border:1px solid #333;
+    background-color: #777;
+    border: 1px solid #333;
 }
-.bankButtonNotFocus{
-    background-color: #777; 
-    border:1px solid #333;
+
+.bankButtonNotFocus {
+    background-color: #777;
+    border: 1px solid #333;
 }
-.bankButtonFocus{
-    background-color: #FFCC00; 
-    border:1px solid #FFCC00;
+
+.bankButtonFocus {
+    background-color: #FFCC00;
+    border: 1px solid #FFCC00;
     border-top: none;
 }
-.bankButton:hover{
+
+.bankButton:hover {
     cursor: pointer;
 }
 
-.routingSwitchOn{
+.routingSwitchOn {
     background: url('img/routingSwitch.png') 18px 0;
 }
-.routingSwitchOff{
+
+.routingSwitchOff {
     background: url('img/routingSwitch.png') 0px 0px;
 }
 
 .routingLed {
-    margin:8px;
-    margin-bottom:0px;
-    margin-top:-4px;
+    margin: 8px;
+    margin-bottom: 0px;
+    margin-top: -4px;
 }
+
 .routingLedTop {
-    margin:8px;
-    margin-bottom:0px;
-    margin-top:14px;
+    margin: 8px;
+    margin-bottom: 0px;
+    margin-top: 14px;
 }
+
 .routingSwitch {
-    margin:4px;
-    margin-top:-1px;
-    margin-bottom:-1px;
+    margin: 4px;
+    margin-top: -1px;
+    margin-bottom: -1px;
 }
+
 #hiLite {
     position: absolute;
     top: 405px;
     left: 70px;
 }
+
 .recallOverlay {
     position: absolute;
     top: 405px;
     left: 70px;
     opacity: 0.4;
 }
+
 
 /*
 
@@ -458,7 +503,9 @@ Recall
     height: 39px;
     background: #ffcc00;
     position: absolute;
-}.routingButton {
+}
+
+.routingButton {
     display: inline-block;
     width: 12px;
     height: 12px;
@@ -467,6 +514,7 @@ Recall
     border: 3px solid #666;
     border-radius: 9px;
 }
+
 .armButton {
     display: inline-block;
     width: 52px;
@@ -475,6 +523,7 @@ Recall
     border: darkred 5px solid;
     position: absolute;
 }
+
 .slot {
     display: inline-block;
     width: 8px;
@@ -482,23 +531,26 @@ Recall
     background: #222;
     position: absolute;
 }
+
 .smallFaderAlert {
     background: url('../img/smallFaderAlert.png') 0px 0px;
     width: 52px;
     height: 76px;
     position: absolute;
-/*    border-radius: 2px;*/
+    /*    border-radius: 2px;*/
 }
+
 .smallFader {
     display: inline-block;
     width: 32px;
     height: 68px;
     background: url('../img/smallFaderKnob.png') 0px 0px;
     position: absolute;
-/*    border-radius: 2px;*/
-/*    box-shadow: 1px 1px 5px #222;*/
+    /*    border-radius: 2px;*/
+    /*    box-shadow: 1px 1px 5px #222;*/
 }
-.horizButton{
+
+.horizButton {
     display: inline-block;
     width: 32px;
     height: 17px;
@@ -506,10 +558,10 @@ Recall
     position: absolute;
 }
 
+
 /******  THUMBWHEEL *******/
 
-
-.thumbNo{
+.thumbNo {
     display: inline-block;
     width: 39px;
     height: 39px;
@@ -524,14 +576,16 @@ Recall
     color: #ccc;
     padding-left: 1px;
 }
-.thumbUp{
+
+.thumbUp {
     display: inline-block;
     width: 14px;
     height: 10px;
     background: url('../img/thumbUp.png') 0px 0px;
     position: absolute;
 }
-.thumbDown{
+
+.thumbDown {
     display: inline-block;
     width: 14px;
     height: 10px;
@@ -539,13 +593,15 @@ Recall
     position: absolute;
 }
 
-.vertButton{
+.vertButton {
     display: inline-block;
     width: 17px;
     height: 32px;
     background: #ffcc00;
     position: absolute;
 }
+
+
 /*.routingButton{
     display: inline-block;
     width: 18px;
@@ -553,22 +609,26 @@ Recall
     background: #ffcc00;
     position: absolute;
 }*/
-.potRing{
+
+.potRing {
     width: 44px;
     height: 44px;
     position: absolute;
 }
-.potRingBig{
+
+.potRingBig {
     width: 62px;
     height: 62px;
     position: absolute;
 }
-.pot{
+
+.pot {
     width: 48px;
     height: 48px;
     position: absolute;
 }
-.blueKnobBig{
+
+.blueKnobBig {
     display: inline-block;
     width: 52px;
     height: 52px;
@@ -576,39 +636,40 @@ Recall
     position: absolute;
 }
 
-.on{
+.on {
     background: #777;
     border: 3px solid #333;
 }
-.off{
+
+.off {
     background: #ccc;
     border: 3px solid #333;
 }
-.onAlert{
+
+.onAlert {
     border: 3px #ffcc00 solid;
     background: #ffcc00;
 }
-.offAlert{
+
+.offAlert {
     border: 3px #ffcc00 solid;
     background: #ffcc00;
 }
 
-
-
-.channelStrip{
+.channelStrip {
     display: inline-block;
-    width:122px;
-    height:610px;
-    max-height:610px;
+    width: 122px;
+    height: 610px;
+    max-height: 610px;
     background-color: #333;
-    border:1px solid #777;
+    border: 1px solid #777;
     position: relative;
     border-radius: 12px;
     margin-left: -1px;
 }
 
-.chnNo{
-    background-color: #777; 
+.chnNo {
+    background-color: #777;
     position: absolute;
     bottom: 12px;
     left: 14px;
@@ -619,19 +680,22 @@ Recall
     border-radius: 5px;
 }
 
-.chnNo p{
-    color: #FFCC00; 
+.chnNo p {
+    color: #FFCC00;
     font-size: 28px;
     text-align: center;
     margin-top: 2px;
     font-weight: 700;
 }
 
-#titleBox:hover, #versionBox:hover {
-    cursor:pointer;
+#titleBox:hover,
+#versionBox:hover {
+    cursor: pointer;
 }
-#titleInput, #versionInput {
-    color: #FFCC00; 
+
+#titleInput,
+#versionInput {
+    color: #FFCC00;
     font-size: 16px;
     text-align: left;
     margin-top: -2px;
@@ -640,8 +704,7 @@ Recall
     box-shadow: 13px 13px 13px 13px #fff;
 }
 
-
-.aeIn{
+.aeIn {
     background-color: #555;
     color: #999;
     font-weight: 600;
@@ -652,9 +715,10 @@ Recall
     cursor: pointer;
     border: none;
     text-align: right;
-   padding-right: 4px;
+    padding-right: 4px;
 }
-.aeLabel{
+
+.aeLabel {
     color: #999;
     font-weight: 400;
     font-size: 16px;
@@ -663,14 +727,16 @@ Recall
     border: none;
     text-align: right;
 }
-.aeSwBase{
+
+.aeSwBase {
     position: absolute;
     height: 24px;
     width: 46px;
     border-radius: 12px;
     cursor: pointer;
 }
-.aeSwKnob{
+
+.aeSwKnob {
     position: absolute;
     background-color: #777;
     height: 20px;
@@ -680,7 +746,6 @@ Recall
     animation-name: on;
     animation-duration: 4s;
 }
-
 
 
 /*

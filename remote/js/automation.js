@@ -414,7 +414,7 @@ function setBank(bank) {
 function setFaderNumbers() {
     var faderBanks = document.getElementById("faderBanks");
     var ctx = faderBanks.getContext('2d');
-    ctx.clearRect(0, 0, 1000, 30);
+    ctx.clearRect(0, 0, 1000, 15);
     for (var i = 0; i < 48; i++) {
         var no = (properties.state.bankPage * 48) + i + 1;
         var bankTmp = Math.floor(i / 8);

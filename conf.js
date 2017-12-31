@@ -17,10 +17,16 @@ Conf.prototype.check = function(conf) {
 }
 
 var template = {
+    version: {
+        hi: 0,
+        lo: 0,
+        build: 229
+    },
     numOfTracks: 96,
     mf08slot: 12,
     trSupport: false,
     sim: false,
+    realtimeDraw: true,
     automation: {
         stopDropOut: 1,
         bankSwitchDropOut: 1

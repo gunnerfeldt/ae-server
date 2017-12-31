@@ -50,6 +50,8 @@ var sslFaders = new function() {
         document.addEventListener('mouseleave', function(e) {
             self.dragStop();
         }, false);
+
+        loop.start();
     }
 
 
@@ -223,4 +225,24 @@ var sslFaders = new function() {
     }
 
 
+}
+
+var loop = new function() {
+    this.interval;
+    this.toggle = 0;
+    this.start = function() {
+        this.interval = setInterval(function() {
+
+            if (this.toggle == 0) this.toggle = 1;
+            else this.toggle = 0;
+
+            for (var chn = 0; chn < 96; chn++) {
+                if (properties.state.alert[chn]) {
+                    if (this.toggle) sslFaders.setStatus(chn, this.toggle * 3);
+                    else sslFaders.setStatus(chn, properties.state.status[chn]);
+                } else sslFaders.setStatus(chn, properties.state.status[chn]);
+            }
+
+        }, 200)
+    }
 }

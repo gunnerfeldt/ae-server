@@ -60,10 +60,16 @@ function Engine() {
 
 Engine.prototype.setConf = function(arg) {
     conf = arg;
+    remote.link({
+        conf: conf
+    });
     return Files.setConf(arg);
 }
 Engine.prototype.getConf = function() {
     conf = confModule.check(Files.getConf());
+    remote.link({
+        conf: conf
+    });
     return conf;
 }
 Engine.prototype.saveConf = function(conf) {
@@ -95,6 +101,7 @@ function parseCv96Data(inBuf, outBuf) {
         automation.tracks[chn].writeSync(mtc, faders.fader[chn]);
         // parse data to binary
         faders.fader[chn].parseToBinary(outBuf);
+        if (faders.fader[chn].latch) faders.fader[chn].latch = 0;
     }
     // do global things once a frame, at the roll over between last and first qFrame
     if (mtc.qFrame == 3) faders.globalRelay(outBuf, remote.broadcast);
@@ -150,8 +157,22 @@ remote.on("request", function(data) {
     }
     */
     if (data.request == "newFile") {
+        // faders = new Faders(96);
+        //    automation = new Automation(96);
+        // hui = new Hui();
+        automation.newFile();
+        faders.newFile();
+        hui.reset();
+        //    Files.packFaderData(faders);
+        //    Files.packAutomationData(automation)
+        remote.newFile();
+        remote.sendSessionData();
+        console.log("autoPts 0");
+        console.log(automation.tracks[0].autoPts);
+
 
     }
+
     if (data.request == "saveFile") {
         if (data.path) Files.setPath(data.path);
         //      Files.packMtc(Mtc);
@@ -176,6 +197,19 @@ remote.on("request", function(data) {
     if (data.request == "openFile") {
         Files.openFile(data.path, faders, automation, function() {
             remote.sendSessionData();
+            console.log("autoPts 0");
+            console.log(automation.tracks[0].autoPts);
         })
+    }
+    if (data.request == "snapshot") {
+        /*
+        loop thru tracks
+        if manual - write pos(0) = current vca
+        set state to read
+        */
+        //   faders.snapshot(automation);
+        automation.snapshot(faders);
+        faders.snapshot();
+        remote.sendSessionData();
     }
 });

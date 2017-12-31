@@ -29,6 +29,7 @@ var faders;
 var automation;
 var recall;
 var remote;
+var conf;
 
 function Remote() {
     var self = this;
@@ -92,6 +93,11 @@ function Remote() {
             if (wsObject.cmd == 0x82) {
                 self.emit("newVersion", wsObject);
             }
+            if (wsObject.cmd == "snapshot") {
+                var callback = {};
+                callback.request = "snapshot";
+                self.emit("request", callback);
+            }
             if (wsObject.cmd == 250) {
                 var callback = {};
                 callback.request = "setRecall";
@@ -148,8 +154,25 @@ Remote.prototype.link = function(obj) {
     if (obj.faders) faders = obj.faders;
     if (obj.recall) recall = obj.recall;
     if (obj.automation) automation = obj.automation;
+    if (obj.conf) conf = obj.conf;
 }
 
+
+Remote.prototype.newFile = function() {
+    for (var n = 0; n < 96; n++) {
+        faders.fader[n].status = 0;
+        faders.fader[n].auto = 0;
+        faders.fader[n].mute = 0;
+        faders.fader[n].touch = 0;
+        faders.fader[n].touchBlink = 0;
+        faders.fader[n].motor = 0;
+        faders.fader[n].write = 0;
+        faders.fader[n].writeLevel = 0;
+        faders.fader[n].hui = null;
+        faders.fader[n].latch = 0;
+    }
+    Files.setFileLabel(Files.getPath().fileLabel + ".1");
+}
 
 Remote.prototype.sendSessionData = function(id) {
 
@@ -171,6 +194,7 @@ Remote.prototype.sendSessionData = function(id) {
             "hui": faders.fader[n].getHuiMode(),
             "autoPts": automation.getPts(n)
         };
+        //   console.log("status chn: " + n + ", " + faders.fader[n].status);
     }
 
     sessionData.bank = faders.bank;

@@ -107,7 +107,6 @@ var menuTemplate = [{
         label: 'Remote 96',
         click: () => {
             toggleWindow(remote96Win);
-
         }
     }]
 }];
@@ -132,7 +131,6 @@ function toggleWindow(win) {
         win.hide();
     } else {
         win.show();
-        //    win.webContents.openDevTools();
     }
     conf[win.name].show = win.isVisible();
 
@@ -150,8 +148,11 @@ function makeRemoteWindow() {
         x: conf.remoteWindow.x,
         y: conf.remoteWindow.y
     });
-    win.loadURL(conf.remoteWindow.remoteUrl);
+    //    win.loadURL(conf.remoteWindow.remoteUrl);
+    win.loadURL(conf.remoteWindow.localUrl);
     win.name = "remoteWindow";
+
+    // win.webContents.openDevTools();
 
     win.on("move", function(e) {
         var pos = win.getPosition();
@@ -162,9 +163,12 @@ function makeRemoteWindow() {
 }
 
 function makeSimWindow() {
-    console.log("WHAT:");
+    console.log("Config file:");
     console.log(conf);
-    conf.simWindow.show = 0;
+
+    // HEYYYY!!!
+    //    conf.simWindow.show = false;
+
     var win = new BrowserWindow({
         width: conf.simWindow.width,
         height: conf.simWindow.height,
@@ -173,8 +177,12 @@ function makeSimWindow() {
         x: conf.simWindow.x,
         y: conf.simWindow.y
     });
+
     //    win.webContents.openDevTools();
-    if (conf.simWindow.show) win.loadURL(conf.simWindow.localUrl);
+
+    if (conf.simWindow.show) {
+        win.loadURL(conf.simWindow.localUrl);
+    }
     win.name = "simWindow";
     win.on("move", function(e) {
         var pos = win.getPosition();

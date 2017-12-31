@@ -42,7 +42,7 @@ Automation.prototype.settings = function(link) {
 Automation.prototype.remote = function(link) {
     remote = link;
 }
-Automation.prototype.newFile = function sync(mtc) {
+Automation.prototype.newFile = function sync() {
     for (var i = 0; i < this.numOfTracks; i++) {
         this.tracks[i].autoPts = {};
         this.tracks[i].syncVca = -1;
@@ -64,6 +64,34 @@ Automation.prototype.getPts = function getPts(trackID) {
     var track = this.tracks[trackID];
     return track.autoPts;
 };
+Automation.prototype.snapshot = function(fdrs) {
+    for (var i = 0; i < 96; i++) {
+        if (fdrs.fader[i].status == 0) {
+            // write auto point
+            // automation.tracks[i].writePoint(0, this.fader[i].in);
+            this.tracks[i].autoPts = null;
+            this.tracks[i].autoPts = {};
+            this.tracks[i].syncVca = -1;
+            this.tracks[i].autoPtsKeys = [];
+            this.tracks[i].lastWrittenVca = -1;
+            this.tracks[i].dropOutVca = -1;
+            this.tracks[i].autoPts[0] = fdrs.fader[i].in;
+            this.tracks[i].autoPts[1] = fdrs.fader[i].in;
+            //            this.tracks[i].autoPts[1] = fdrs.fader[i].in;
+            this.tracks[i].sort();
+            /*
+            remote.broadcast({
+                'cmd': 0x21,
+                'id': i,
+                'points': this.tracks[i].autoPts,
+                'track': i
+            });
+            */
+        }
+    }
+    console.log("autPts 0");
+    console.log(this.tracks[0].autoPts);
+}
 
 // Constructor for the automation tracks
 var TrackClass = function(base, id) {
@@ -76,6 +104,7 @@ var TrackClass = function(base, id) {
     this.dropOutVca = -1;
     this.recState = REC_STATE_IDLE;
     this.syncMtc = -1;
+    //    this.latchFlag = 0;
 }
 
 // READ POINT
@@ -121,8 +150,14 @@ TrackClass.prototype.writeSync = function(mtc, fader) {
         // must make a lighter real time gui draw
         // sendGuiPoints(fader.id, this.autoPts);
         addGuiPoint(fader.id, mtc.position, fader.writeLevel, fader.writeLevel);
+
     } else if (recState == REC_STATE_DROP_OUT) {
         this.writePoint(mtc.position, fader.writeLevel);
+        sendGuiPoints(fader.id, this.autoPts);
+    } else if (recState == REC_STATE_LATCH) {
+        this.latch(mtc.position);
+        this.syncVca = this.lastWrittenVca;
+        fader.auto = this.lastWrittenVca;
         sendGuiPoints(fader.id, this.autoPts);
     }
 }
@@ -198,10 +233,13 @@ TrackClass.prototype.latch = function latch(mtc) {
 // State machine for track WRITE STATE
 TrackClass.prototype.recStateMachine = function(mtc, fader) {
     if ((this.recState == REC_STATE_DROP_IN) && (mtc.state == STATE_RUN)) this.recState = REC_STATE_WRITE;
-    else if (this.recState == REC_STATE_DROP_OUT) this.recState = REC_STATE_IDLE;
+    else if ((this.recState == REC_STATE_DROP_OUT) || (this.recState == REC_STATE_LATCH)) this.recState = REC_STATE_IDLE;
     else if ((this.recState == REC_STATE_IDLE) && (fader.write == 1) && (mtc.state == STATE_RUN)) this.recState = REC_STATE_DROP_IN;
-    else if (this.recState == REC_STATE_WRITE && fader.write != 1) this.recState = REC_STATE_DROP_OUT;
-    else if (this.recState == REC_STATE_WRITE && mtc.state != STATE_RUN) this.recState = REC_STATE_DROP_OUT;
+    else if (this.recState == REC_STATE_WRITE && fader.write != 1) {
+        if (fader.latch) {
+            this.recState = REC_STATE_LATCH;
+        } else this.recState = REC_STATE_DROP_OUT;
+    } else if (this.recState == REC_STATE_WRITE && mtc.state != STATE_RUN) this.recState = REC_STATE_DROP_OUT;
     return this.recState;
 }
 
@@ -213,6 +251,9 @@ TrackClass.prototype.sort = function sort() {
     });
 }
 
+
+// this is heavy for the network so make it optional for now
+// this is done/checked in wsserver.js
 function addGuiPoint(id, position, value, dropOutVca) {
     remote.broadcast({
         "cmd": 0x22, // command for track points

@@ -215,18 +215,19 @@ exports.openFile = function(path, faders, automation, callback) {
                 }
             }
             automation.setPts(i, fileRead.automationData.autoPts[i]);
+            /*
+                        var keys = [];
+                        for (var k in fileRead.automationData.autoPts[i]) keys.push(k);
+                        //   console.log('length '+keys.length);
 
-            var keys = [];
-            for (var k in fileRead.automationData.autoPts[i]) keys.push(k);
-            //   console.log('length '+keys.length);
-
-            if (keys.length > 0) {
-                //    faders.setDirty(i, 1);
-                var s = faders.fader[i].status;
-                // faders.fader[i].vcaOut = fileRead.automationData.autoPts[i][0];
-            } else {
-                //    faders.setDirty(i, 0);
-            }
+                        if (keys.length > 0) {
+                            //    faders.setDirty(i, 1);
+                            var s = faders.fader[i].status;
+                            // faders.fader[i].vcaOut = fileRead.automationData.autoPts[i][0];
+                        } else {
+                            //    faders.setDirty(i, 0);
+                        }
+                        */
             /*
                 var statusObject = {
                     'tag': 'status',

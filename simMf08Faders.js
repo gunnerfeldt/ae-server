@@ -14,6 +14,7 @@ mf08touch.src = "img/led/mf08touch.png";
 mf08write.src = "img/led/mf08write.png";
 
 var FILTER = 4;
+var filterInhibit = [0, 0, 0, 0, 0, 0, 0, 0];
 
 function MF08() {
 
@@ -87,7 +88,15 @@ MF08.prototype.motorLoop = function(id) {
         properties.state.vcaLevel[id] = Math.round((parseInt(knob.style.bottom)) * (1023 / knob.aeMax));
     } else {
         var val = properties.state.vcaLevel[id];
-        knob.slow = ((knob.slow * (FILTER - 1)) + val) / FILTER;
+        var pos;
+
+        if (filterInhibit[id]) {
+            knob.slow = val;
+            filterInhibit[id] = 0;
+        } else {
+            knob.slow = ((knob.slow * (FILTER - 1)) + val) / FILTER;
+        }
+
         var pos = Math.round(knob.slow * (knob.aeMax / 1023));
         knob.style.bottom = pos + "px";
         parseObj({
@@ -104,7 +113,13 @@ MF08.prototype.update = function(data) {
         var knob = document.getElementById("knob" + i);
         var oldPos = parseInt(knob.style.bottom);
         var pos = Math.round(data.fader[i].pos * (knob.aeMax / 1023));
-        var pos = Math.round((pos + oldPos) / 2);
+        // filter
+        if (filterInhibit[i]) {
+            //    filterInhibit[i] = 0;
+        } else {
+            pos = Math.round((pos + oldPos) / 2);
+        }
+
         if (!knob.aeTouch) knob.style.bottom = pos + "px";
 
         var panel = document.getElementById("faderPanel" + i);

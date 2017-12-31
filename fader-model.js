@@ -30,6 +30,7 @@ var remote;
 var hui;
 
 function AutomanFaders(max) {
+    var me = this;
     this.systemMode = 1;
     this.mtc;
     this.fader = [];
@@ -48,6 +49,7 @@ function AutomanFaders(max) {
 }
 AutomanFaders.prototype.globalRelay = function(outBuf, broadcast) {
 
+    // BANK SWITCH
     if (this.bankSwitch == 1) {
         // what qframe slot is the control bank on?
         var q = Math.floor(this.cBank / 3);
@@ -65,6 +67,7 @@ AutomanFaders.prototype.globalRelay = function(outBuf, broadcast) {
         })
         this.bankSwitch = 0;
     }
+    // DISPLAYS ON MOTER FADERS BLINK
     if (this.blink == 1) {
         // what qframe slot is the control bank on?
         var q = Math.floor(this.cBank / 3);
@@ -86,6 +89,45 @@ AutomanFaders.prototype.remote = function(link) {
 AutomanFaders.prototype.hui = function(link) {
     hui = link;
 }
+AutomanFaders.prototype.newFile = function(max) {
+        for (var i = 0; i < max; i++) {
+            this.fader[i] = new fader(i);
+            this.fader[i].id = i;
+            this.fader[i].base = this;
+            this.fader[i].bank = Math.floor(i / 8);
+            this.fader.status = STATUS_MAN;
+            this.fader.hui = null;
+        }
+    }
+    /*
+    AutomanFaders.prototype.snapshot = function(automation) {
+        for (var i = 0; i < 96; i++) {
+            if (this.fader[i].status == STATUS_MAN) {
+                // write auto point
+                // automation.tracks[i].writePoint(0, this.fader[i].in);
+                automation.tracks[i].autoPts = null;
+                automation.tracks[i].autoPts = [];
+                automation.tracks[i].autoPts[0] = this.fader[i].in;
+                automation.tracks[i].autoPts[1] = this.fader[i].in;
+                // set status = auto
+                this.fader[i].setStatus(STATUS_AUTO);
+                remote.broadcast({
+                    'cmd': 0x21,
+                    'id': i,
+                    'points': automation.tracks[i].autoPts,
+                    'track': i
+                });
+            }
+        }
+    }
+    */
+AutomanFaders.prototype.snapshot = function() {
+    for (var i = 0; i < 96; i++) {
+        if (this.fader[i].status == STATUS_MAN) {
+            this.fader[i].setStatus(STATUS_AUTO);
+        }
+    }
+}
 
 function fader(id) {
     var me = this;
@@ -103,9 +145,15 @@ function fader(id) {
     this.write = 0;
     this.writeLevel = 0;
     this.hui = null;
+    this.latch = 0;
 }
 
 // this will route ins/outs/auto to the right places
+/*
+ ***
+ *** ONLY HERE SHOULD THIS ROUTING OCCUR !!!!!
+ ***
+ */
 fader.prototype.relay = function(mtc, automation) {
 
     var auto = (this.status > STATUS_MAN);
@@ -136,13 +184,18 @@ fader.prototype.relay = function(mtc, automation) {
             this.out = this.base.fader[ctrlBankID].in;
             this.writeLevel = this.base.fader[ctrlBankID].in;
             if (this.status > STATUS_AUTO) this.write = 1;
-        } else if (run && auto && !touch)
+        } else if (run && auto && !touch) {
             this.out = this.auto;
-        else
+        } else {
             this.out = this.in;
-
-
+        }
+        if (this.latch) {
+            //    this.latch = 0; // now set in engine loop, at the end
+            this.auto = this.base.fader[ctrlBankID].in;
+            this.out = this.auto;
+        }
     }
+
     // Is this part of the control bank ?
     if (cBank) {
         // then find out the ID of the fader in the hi-lighted bank
@@ -150,7 +203,14 @@ fader.prototype.relay = function(mtc, automation) {
         var hlFader = this.base.fader[hlBankID];
         this.status = hlFader.status;
         if (run && (hlFader.status > STATUS_MAN)) {
-            this.out = hlFader.auto;
+            if (hlFader.latch) {
+                //    this.latch = 0; // now set in engine loop, at the end
+                this.out = this.in;
+            } else {
+                this.out = hlFader.auto;
+            }
+
+            //    console.log("c fader out(" + this.id + ") = " + this.out);
         } else {
             this.out = hlFader.in;
         }
@@ -299,7 +359,10 @@ fader.prototype.statusFlags = function(bits) {
                 else if (hlFader.status === STATUS_TOUCH) newStatus = STATUS_AUTO;
                 else if (hlFader.status === STATUS_WRITE) {
                     newStatus = STATUS_TOUCH;
+                    hlFader.latch = 1;
+
                     // latch
+                    // hlFader.auto = this.in;
                 }
             }
             if (bits === STATUS_TOUCH) {
@@ -336,6 +399,7 @@ fader.prototype.parseToBinary = function(outBuf) {
     outBuf[q][8 + (i * 2)] = this.out & 0xff;
     outBuf[q][9 + (i * 2)] = (outBuf[q][9 + (i * 2)] & 0xFC) + ((this.out >> 8) & 3);
     // status
+    // outBuf[q][9 + (i * 2)] = (outBuf[q][9 + (i * 2)] & 0xF3) + ((this.status & 3) << 2);
     outBuf[q][9 + (i * 2)] = (outBuf[q][9 + (i * 2)] & 0xF3) + ((this.status & 3) << 2);
     // mute
     outBuf[q][9 + (i * 2)] = (outBuf[q][9 + (i * 2)] & 0x7F) + ((this.mute & 1) << 7);
@@ -346,6 +410,12 @@ fader.prototype.parseToBinary = function(outBuf) {
         outBuf[q][9 + (i * 2)] = clearBit(outBuf[q][9 + (i * 2)], 0x40);
 
     outBuf[q][9 + (i * 2)] = (outBuf[q][9 + (i * 2)] & 0x7F) + ((this.mute & 1) << 7);
+
+    /*
+    if (this.id == 88 && this.status > 1) {
+        console.log("status: " + this.status + ", auto track: " + this.auto + ", out track: " + this.out);
+    }
+    */
 }
 
 fader.prototype.setHuiMode = function(msg) {

@@ -1,0 +1,915 @@
+::-webkit-scrollbar {
+    display: none;
+    font-family: arial;
+}
+
+body {
+    position: absolute;
+    font-family: arial;
+    text-align: center;
+    background-color: #000;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    /*  max-width: 1020px; */
+}
+
+#app {
+    position: relative;
+    margin: auto;
+    background-color: #FFCC00;
+    border-radius: 10px 10px 0 0;
+    height: 100%;
+    min-height: 728px;
+    max-height: 748px;
+    width: 100%;
+    min-width: 984px;
+    max-width: 1010px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+#guiApp {
+    position: relative;
+    margin: auto;
+    background-color: #FFCC00;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+header {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    height: 68px;
+}
+
+#mainGUI {
+    position: absolute;
+    margin: auto;
+    background-color: #FFCC00;
+    width: 100%;
+    top: 68px;
+    bottom: 40px;
+    min-width: 1010px;
+}
+
+#defaultWrapper {
+    height: 100%;
+    margin: 0px 10px 0px 10px;
+    text-align: center;
+    overflow: hidden;
+    background-color: #333;
+    border: 1px solid #777;
+}
+
+.defaultHeader {
+    position: absolute;
+    font-family: arial;
+    font-size: 28px;
+    font-weight: 600;
+    color: #777;
+    padding-left: 5px;
+    text-align: left;
+    border: none;
+}
+
+.defaultLabel {
+    position: absolute;
+    font-family: arial;
+    font-size: 28px;
+    font-weight: 400;
+    color: #777;
+    padding-right: 5px;
+    padding-top: 4px;
+    text-align: right;
+    border: none;
+}
+
+.defaultInput {
+    position: absolute;
+    font-family: arial;
+    font-size: 28px;
+    font-weight: 600;
+    color: #999;
+    padding-left: 5px;
+    text-align: left;
+    background: #444;
+    border: none;
+}
+
+.defaultButton {
+    position: absolute;
+    font-family: arial;
+    font-size: 24px;
+    font-weight: 600;
+    color: #777;
+    padding-left: 5px;
+    text-align: left;
+    background: #444;
+    border: 2px #555 solid;
+    padding-left: 10px;
+    padding-right: 14px;
+    height: 34px;
+    margin-top: 2px;
+}
+
+.defaultButton:hover {
+    color: #333;
+    background: #777;
+    cursor: pointer;
+    border: none;
+}
+
+footer {
+    position: absolute;
+    height: 40px;
+    width: 100%;
+    bottom: 0px;
+    margin: auto;
+}
+
+
+/*
+    html += '<div class="container style="left: 0px; top: 0px; width: 180px; height: 68px;">';
+    html += '<div class="AEline" style="left: 0px; top: 0px; width: 180px;"></div>';
+    html += '<div class="AEtext" style="font-size: 14px; text-align: left; font-weight: 600;">AUTOMAN SW96 REMOTE</div>';
+    html += '<div class="AEbuttonA" style="left: 0px; top: 0px; height; 24; width: 44px;">File<div class="AEcorner"></div></div>';
+    html += '<div class="AEbuttonA" style="left: 0px; top: 0px; height; 24; width: 44px;">Mode<div class="AEcorner"></div></div>';
+    html += '<div class="AEbuttonA" style="left: 0px; top: 0px; height; 24; width: 44px;">Options<div class="AEcorner"></div></div>';
+*/
+
+#logo {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    cursor: pointer;
+    width: 28px;
+    height: 52px;
+    background: url('../img/logoAll.png') 0px 0px;
+}
+
+.container {
+    position: absolute;
+}
+
+.AEline {
+    position: absolute;
+    height: 2px;
+    background: #323232;
+}
+
+.AEtext {
+    position: absolute;
+}
+
+.AEbuttonA {
+    position: absolute;
+    background: #323232;
+    color: #FFCC00;
+    font-size: 14px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.AEbuttonA:hover {
+    background: #999;
+    color: #323232;
+    cursor: pointer;
+}
+
+.AEbuttonB {
+    position: absolute;
+    background: #323232;
+    color: #FFCC00;
+    font-size: 14px;
+    text-align: left;
+    font-weight: 600;
+    overflow: hidden;
+}
+
+.AEcorner {
+    position: absolute;
+    background: url('../img/foldedCorner.png') 0px 0px;
+    width: 7px;
+    height: 7px;
+    top: 0;
+    right: 0;
+}
+
+#mtcPanel {
+    position: absolute;
+    top: 14px;
+    right: 67px;
+    width: 256px;
+    height: 46px;
+    border-radius: 6px;
+    background: #323232;
+}
+
+#mtcCells {
+    position: absolute;
+    right: 13px;
+    text-align: right;
+    color: #FFCC00;
+}
+
+#mtcCells td {
+    font-weight: 600;
+    text-align: center;
+}
+
+.mtcDigit {
+    font-size: 38px;
+    max-width: 0.43em;
+}
+
+.separator {
+    position: relative;
+    font-size: 30px;
+    right: 1px;
+    bottom: 2px;
+    max-width: 4px;
+}
+
+#clock {
+    position: absolute;
+    top: 11px;
+    right: 10px;
+    background: url('../img/clockBase.png') 0px 0px;
+    height: 52px;
+    width: 52px;
+}
+
+.clockPointers {
+    height: 52px;
+    width: 52px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+#clockMin {
+    background: url('../img/clockMin.png') 0px 0px;
+}
+
+#clockSec {
+    background: url('../img/clockSec.png') 0px 0px;
+}
+
+#clockFrame {
+    background: url('../img/clockFrame.png') 0px 0px;
+}
+
+.hidden {
+    display: none;
+}
+
+#alertDiv {
+    font-family: arial;
+    color: #bbb;
+    text-align: center;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 120px;
+}
+
+.menuList {
+    font-family: arial;
+    width: auto;
+    list-style: none;
+    color: #bbb;
+    text-align: left;
+    font-weight: 600;
+    padding: 0px 0px 0px 0px;
+    margin: 10px 0px 6px 0px;
+}
+
+.menuList li {}
+
+.menuList span {
+    position: relative;
+    left: 0px;
+    margin: 0px 15px 0px 10px;
+}
+
+.menuList .sep {
+    width: 100%;
+    height: 2px;
+    background-color: #777;
+    margin: 5px 0 5px 0;
+    padding: 0;
+}
+
+.menuList :not(.sep):hover {
+    background: #999;
+    color: #323232;
+    cursor: pointer;
+}
+
+.statusMenuList {
+    font-size: 14px;
+    line-height: 18px;
+    position: absolute;
+    border: 1px #555 solid;
+    font-family: arial;
+    width: 170px;
+    list-style: none;
+    text-align: left;
+    font-weight: 600;
+    padding: 7px 0px 7px 0px;
+    margin: 4px 0px 4px 0px;
+    background: #444;
+    box-shadow: 3px 3px 3px #323232;
+}
+
+.statusMenuList li {
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.statusMenuList li:nth-child(odd) {
+    background-color: #444;
+}
+
+.statusMenuList li:nth-child(even) {
+    background-color: #454545;
+}
+
+.statusMenuList span {
+    position: relative;
+    left: 0px;
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+
+.statusMenuList .sep {
+    width: 100%;
+    height: 2px;
+    background-color: #777;
+    margin: 5px 0 5px 0px;
+    padding: 0px 0px 0px 0px;
+}
+
+.statusMenuList :not(.sep):hover {
+    background: #999;
+    color: #323232;
+    cursor: pointer;
+}
+
+.aeButton {
+    background: #DDD;
+    border: solid 2px #777;
+    border-radius: 10px;
+    display: inline-block;
+    font-family: arial;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 19px;
+    padding-bottom: 17px;
+    margin-left: 2px;
+    margin-right: 2px;
+    min-width: 80px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.alertButton {
+    background: #777;
+    border: solid 2px #888;
+    border-radius: 10px;
+    display: inline-block;
+    font-family: arial;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-left: 4px;
+    margin-right: 4px;
+    min-width: 80px;
+    text-align: center;
+    line-height: 44px;
+    cursor: pointer;
+}
+
+
+/**********
+
+Recall
+
+
+**/
+
+#banks {
+    min-width: 984px;
+    max-width: 1020px;
+    position: relative;
+    background-color: #000;
+    display: table;
+    text-align: center;
+    width: 100%;
+    color: #333;
+    font-size: 24px;
+    font-weight: 600;
+    table-layout: fixed;
+    margin: auto;
+}
+
+.bankButton {
+    padding-top: 6px;
+    display: table-cell;
+    position: relative;
+    min-height: 38px;
+    height: 32px;
+    text-align: center;
+    border-radius: 0 0 15px 15px;
+    background-color: #777;
+    border: 1px solid #333;
+}
+
+.bankButtonNotFocus {
+    background-color: #777;
+    border: 1px solid #333;
+}
+
+.bankButtonFocus {
+    background-color: #FFCC00;
+    border: 1px solid #FFCC00;
+    border-top: none;
+}
+
+.bankButton:hover {
+    cursor: pointer;
+}
+
+.routingSwitchOn {
+    background: url('img/routingSwitch.png') 18px 0;
+}
+
+.routingSwitchOff {
+    background: url('img/routingSwitch.png') 0px 0px;
+}
+
+.routingLed {
+    margin: 8px;
+    margin-bottom: 0px;
+    margin-top: -4px;
+}
+
+.routingLedTop {
+    margin: 8px;
+    margin-bottom: 0px;
+    margin-top: 14px;
+}
+
+.routingSwitch {
+    margin: 4px;
+    margin-top: -1px;
+    margin-bottom: -1px;
+}
+
+#hiLite {
+    position: absolute;
+    top: 405px;
+    left: 70px;
+}
+
+.recallOverlay {
+    position: absolute;
+    top: 405px;
+    left: 70px;
+    opacity: 0.4;
+}
+
+
+/*
+
+    *** Small Fader ***
+
+*/
+
+.squareButton {
+    display: inline-block;
+    width: 39px;
+    height: 39px;
+    background: #ffcc00;
+    position: absolute;
+}
+
+.routingButton {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    background: #ccc;
+    border: 3px solid #666;
+    border-radius: 9px;
+}
+
+.armButton {
+    display: inline-block;
+    width: 52px;
+    height: 34px;
+    background: #D92021;
+    border: darkred 5px solid;
+    position: absolute;
+}
+
+.slot {
+    display: inline-block;
+    width: 8px;
+    height: 270px;
+    background: #222;
+    position: absolute;
+}
+
+.smallFaderAlert {
+    background: url('../img/smallFaderAlert.png') 0px 0px;
+    width: 52px;
+    height: 76px;
+    position: absolute;
+    /*    border-radius: 2px;*/
+}
+
+.smallFader {
+    display: inline-block;
+    width: 32px;
+    height: 68px;
+    background: url('../img/smallFaderKnob.png') 0px 0px;
+    position: absolute;
+    /*    border-radius: 2px;*/
+    /*    box-shadow: 1px 1px 5px #222;*/
+}
+
+.horizButton {
+    display: inline-block;
+    width: 32px;
+    height: 17px;
+    background: #ffcc00;
+    position: absolute;
+}
+
+
+/******  THUMBWHEEL *******/
+
+.thumbNo {
+    display: inline-block;
+    width: 39px;
+    height: 39px;
+    background: #666;
+    position: absolute;
+    border: 3px solid #666;
+    font-family: courier;
+    line-height: 2.0em;
+    font-size: 19px;
+    font-weight: 500;
+    text-align: center;
+    color: #ccc;
+    padding-left: 1px;
+}
+
+.thumbUp {
+    display: inline-block;
+    width: 14px;
+    height: 10px;
+    background: url('../img/thumbUp.png') 0px 0px;
+    position: absolute;
+}
+
+.thumbDown {
+    display: inline-block;
+    width: 14px;
+    height: 10px;
+    background: url('../img/thumbDown.png') 0px 0px;
+    position: absolute;
+}
+
+.vertButton {
+    display: inline-block;
+    width: 17px;
+    height: 32px;
+    background: #ffcc00;
+    position: absolute;
+}
+
+
+/*.routingButton{
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: #ffcc00;
+    position: absolute;
+}*/
+
+.potRing {
+    width: 44px;
+    height: 44px;
+    position: absolute;
+}
+
+.potRingBig {
+    width: 62px;
+    height: 62px;
+    position: absolute;
+}
+
+.pot {
+    width: 48px;
+    height: 48px;
+    position: absolute;
+}
+
+.blueKnobBig {
+    display: inline-block;
+    width: 52px;
+    height: 52px;
+    background: url('../img/bigKnobBlue.png') 0px 0px;
+    position: absolute;
+}
+
+.on {
+    background: #777;
+    border: 3px solid #333;
+}
+
+.off {
+    background: #ccc;
+    border: 3px solid #333;
+}
+
+.onAlert {
+    border: 3px #ffcc00 solid;
+    background: #ffcc00;
+}
+
+.offAlert {
+    border: 3px #ffcc00 solid;
+    background: #ffcc00;
+}
+
+.channelStrip {
+    display: inline-block;
+    width: 122px;
+    height: 610px;
+    max-height: 610px;
+    background-color: #333;
+    border: 1px solid #777;
+    position: relative;
+    border-radius: 12px;
+    margin-left: -1px;
+}
+
+.chnNo {
+    background-color: #777;
+    position: absolute;
+    bottom: 12px;
+    left: 14px;
+    min-height: 28px;
+    height: 34px;
+    width: 94px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.chnNo p {
+    color: #FFCC00;
+    font-size: 28px;
+    text-align: center;
+    margin-top: 2px;
+    font-weight: 700;
+}
+
+#titleBox:hover,
+#versionBox:hover {
+    cursor: pointer;
+}
+
+#titleInput,
+#versionInput {
+    color: #FFCC00;
+    font-size: 16px;
+    text-align: left;
+    margin-top: -2px;
+    padding-left: 2px;
+    font-weight: 700;
+    box-shadow: 13px 13px 13px 13px #fff;
+}
+
+.aeIn {
+    background-color: #555;
+    color: #999;
+    font-weight: 600;
+    font-size: 16px;
+    position: absolute;
+    height: 22px;
+    border-radius: 2px;
+    cursor: pointer;
+    border: none;
+    text-align: right;
+    padding-right: 4px;
+}
+
+.aeLabel {
+    color: #999;
+    font-weight: 400;
+    font-size: 16px;
+    position: absolute;
+    height: 24px;
+    border: none;
+    text-align: right;
+}
+
+.aeSwBase {
+    position: absolute;
+    height: 24px;
+    width: 46px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.aeSwKnob {
+    position: absolute;
+    background-color: #777;
+    height: 20px;
+    width: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    animation-name: on;
+    animation-duration: 4s;
+}
+
+
+/*
+.ios8{
+    top: 20px;
+}
+.browser{
+    top: 0px;
+}
+
+
+#page{
+    margin: auto;
+    height:100%;
+    min-height: 100%;
+    position:relative;
+    min-width: 984px;
+    max-width: 1020px;
+}
+
+#app {
+    margin: auto;
+    background-color: #FFCC00; 
+    border-radius: 10px 10px 0 0;
+    height:100%;
+    overflow: hidden;
+    overflow-y:scroll;
+}
+
+header{
+    height: 60px;
+    margin-bottom: 6px;
+}
+#topCells{
+    display: table;
+    text-align: left; 
+    margin-left: 42px;
+    width: 100%;
+    margin-top: 9px;
+    height: 56px;
+    color: #333;
+}
+#buttonData{
+    width:206px;
+}
+
+
+#buttonRow td{
+    text-align: center;
+    width: 68px;
+    height: 47px;
+    color: #ffcc00;
+    background-color: #333;
+    cursor: pointer;
+}
+#infoCells{
+    width: 100%;
+    margin-left:-2px;
+    margin-right:-2px;
+}
+#lineTop {
+    background-color: #333;
+}
+
+#infoCells th, mtcCells th{
+    border: 1px #000;
+    height: 20%;
+    font-size: 11px;
+}
+.infoLabel{
+    padding-bottom: 0px; 
+    margin-left:2px;
+}
+#infoData{
+    height: 1.6em;
+}
+#infoCells td{   
+    font-size: 18px;
+    font-weight: 500;
+    background-color: #333;
+    color: #FFCC00;
+    padding-left:4px;
+    padding-top:6px;
+    padding-bottom:3px;
+}
+#mtcInfo{
+    max-width:18px;
+}
+#mtcInfo th{
+    height: 20%;
+    font-size: 11px;
+    padding-left:3px;
+}
+#mtcInfo td{
+    font-size: 18px;
+    font-weight: 500;
+    background-color: #333;
+    color: #FFCC00;
+    padding-left:4px;
+    padding-right:3px;
+    padding-top:2px;
+}
+#mtcData{
+    width: 250px;
+}
+#mtcInfoCells{
+    margin-left: -2px;
+}
+#mtcCells{
+    margin-left: -5px;
+    text-align: right;
+    background-color: #333;
+    padding: 0 5px 0 4px;
+    color: #FFCC00;
+}
+#mtcCells td{
+    font-size: 38px;
+    font-weight: 600;
+    text-align: left;
+    max-width: 0.5em;
+}
+
+#clock{
+    background: url('../img/clockBase.png') 0px 0px;
+    height: 52px;
+    width: 52px;
+    margin-right:3px;
+    margin-left:-7px;
+    margin-top:1px;
+    position: relative;
+}
+.clockPointers{
+    height: 52px;
+    width: 52px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    display: block;
+}
+#clockMin{
+    background: url('../img/clockMin.png') 0px 0px;
+}
+#clockSec{
+    background: url('../img/clockSec.png') 0px 0px;
+}
+#clockFrame{
+    background: url('../img/clockFrame.png') 0px 0px;
+}
+#version{
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    text-align: right;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+
+
+#logo{
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    cursor: pointer;
+}
+
+*/

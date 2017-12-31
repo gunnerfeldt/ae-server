@@ -31,6 +31,7 @@
             vcaLevel: [],
             faderLevel: [],
             status: [],
+            alert: [],
             guiFaderTouch: -1,
             yLevelStart: 0
         },
@@ -126,6 +127,13 @@
                 sslFaders.setStatus(id, status);
                 if (bank == properties.state.cBank) mf08.setStatus(id, status);
             }
+            // 0x40 bit - touch alert / motor on
+            var alert = ((outBuf[9 + (i * 2)] & 0x40) >> 6);
+            if (properties.state.alert[id] != alert) {
+                properties.state.alert[id] = alert;
+                //    console.log("ALERT chn: " + id + ", Val: " + alert);
+            }
+
         }
     }
 

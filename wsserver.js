@@ -15,6 +15,7 @@ module.exports = Server;
 
 
 var clients = [];
+var conf;
 
 
 
