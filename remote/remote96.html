@@ -248,6 +248,7 @@
                         console.log("MTC Start");
                         pageFlipInhibit = 0;
                         timeLine.rePaintFlag = 1;
+                        console.log("MTC read by: " + data.sender);
                     }
                     if (data.state === 3) {
                         console.log("MTC Stop");
@@ -298,10 +299,8 @@
 
                 client.on("trackStatus", function(data) {
                     properties.sessionState.faders[data.chn].status = data.status;
-                    setStatus(data.chn, data.status);
-                    //    properties.dirty = 1; 
-                    console.log("set status");
-                    console.log(data);
+                    //    setStatus(data.chn, data.status);
+                    //    if (properties.state.activeMode === "mf08") mf08.setStatus(data);
                 });
                 client.on("trackTouch", function(data) {
                     var bankPage = Math.floor(data.chn / 48);
@@ -456,6 +455,9 @@
                 client.on("mf08", function(data) {
                     mf08.update(data);
                 });
+                client.on("mf08status", function(data) {
+                    mf08.setStatus(data);
+                });
 
                 files.on("expand", function(data) {
                     client.send({
@@ -523,6 +525,15 @@
                     document.getElementById("footer").innerHTML = recallTabs();
                     resetRecallLayout();
                 }
+                if (mode === "mf08") {
+                    properties.state.activeMode = "mf08";
+                    document.getElementById("mainGUI").innerHTML = "";
+                    document.getElementById("mainGUI").appendChild(mf08.createMfPanel(990, 534));
+                    releaseMenus();
+                    mf08.startFetchLoop();
+                }
+
+
             }
 
             function setSessionData(sessionData) {
@@ -683,11 +694,17 @@
                         break;
                     case "menu2:3":
                         // MF08
+                        client.send({
+                            "cmd": 4,
+                            "mode": "mf08"
+                        });
+                        /*
                         properties.state.activeMode = "mf08";
                         document.getElementById("mainGUI").innerHTML = "";
                         document.getElementById("mainGUI").appendChild(mf08.createMfPanel(990, 534));
                         releaseMenus();
                         mf08.startFetchLoop();
+                        */
                         break;
                     case "menu3:1":
                         releaseMenus();
