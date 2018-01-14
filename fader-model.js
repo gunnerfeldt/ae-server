@@ -65,6 +65,9 @@ AutomanFaders.prototype.globalRelay = function(outBuf, broadcast) {
             "cmd": 0x36,
             "bank": this.bank
         })
+        if (conf.mode == "mf08") {
+            this.updateMf08();
+        }
         this.bankSwitch = 0;
     }
     // DISPLAYS ON MOTER FADERS BLINK
@@ -122,13 +125,32 @@ AutomanFaders.prototype.newFile = function(max) {
     }
     */
 AutomanFaders.prototype.snapshot = function() {
-    for (var i = 0; i < 96; i++) {
-        if (this.fader[i].status == STATUS_MAN) {
-            this.fader[i].setStatus(STATUS_AUTO);
+        for (var i = 0; i < 96; i++) {
+            if (this.fader[i].status == STATUS_MAN) {
+                this.fader[i].setStatus(STATUS_AUTO);
+            }
         }
     }
-}
-
+    /*
+    AutomanFaders.prototype.mf08 = function(data) {
+        var ctrlBankID = (this.cBank * 8) + (data.chnId % 8);
+        if (data.type == "statusSwitch") {
+            this.fader[ctrlBankID].statusFlags(data.status)
+        }
+    }
+    AutomanFaders.prototype.updateMf08 = function(data) {
+        for (var i = 0; i < 8; i++) {
+            var ctrlBankID = (this.cBank * 8) + (i % 8);
+            var hlBankID = (this.bank * 8) + (i % 8);
+            var hlFader = this.fader[hlBankID];
+            remote.broadcast({
+                "cmd": 0x31, // command for status change - real time data
+                "chn": ctrlBankID, // channel no
+                "status": hlFader.status // 0, 1, 2 or 3
+            });
+        }
+    }
+    */
 function fader(id) {
     var me = this;
     this.base;
@@ -311,6 +333,7 @@ fader.prototype.touchFlags = function(flags) {
     }
 }
 
+
 fader.prototype.statusFlags = function(bits) {
     if (bits != 0) {
         var cBank = (this.bank == this.base.cBank);
@@ -465,6 +488,7 @@ fader.prototype.setStatus = function(status) {
         "chn": this.id, // channel no
         "status": this.status // 0, 1, 2 or 3
     });
+    console.log("send set status")
 }
 
 function getDelta(hui, vca) {
