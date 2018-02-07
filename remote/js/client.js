@@ -305,12 +305,15 @@ function Client() {
             events.fire("version", wsObject);
             return;
         }
+
         if (properties.state.activeMode === "automation") {
+
             if (cmd === 0x31) {
                 properties.sessionState.faders[wsObject.chn].status = wsObject.status;
                 events.fire("trackStatus", wsObject);
                 return;
             }
+
             if (cmd === 0x33) {
                 events.fire("trackTouch", wsObject);
                 return;
@@ -357,11 +360,23 @@ function Client() {
             }
         }
         if (properties.state.activeMode === "mf08") {
+            if (cmd === 0x36) {
+                events.fire("mf08switchBank", wsObject);
+                return;
+            }
             if (cmd === "mf08") {
                 events.fire("mf08", wsObject);
                 return;
             }
+            if (cmd === 0x31) {
+                properties.sessionState.faders[wsObject.chn].status = wsObject.status;
+                events.fire("mf08status", wsObject);
+                return;
+            }
+            if (cmd === 0x34) {
+                events.fire("mf08level", wsObject);
+                return;
+            }
         }
     }
-
 }

@@ -5,6 +5,8 @@
  */
 module.exports = AutomanFaders;
 
+var mf08remote = false;
+
 var FILTER = 2;
 
 var STATUS_BITS = 0x0C;
@@ -39,6 +41,8 @@ function AutomanFaders(max) {
     this.bankSwitch = 0;
     this.blink = 0;
     this.blinkID = 0;
+    var mf08remote = false;
+    this.run = 0;
 
     for (var i = 0; i < max; i++) {
         this.fader[i] = new fader(i);
@@ -65,9 +69,7 @@ AutomanFaders.prototype.globalRelay = function(outBuf, broadcast) {
             "cmd": 0x36,
             "bank": this.bank
         })
-        if (conf.mode == "mf08") {
-            this.updateMf08();
-        }
+        this.updateMf08();
         this.bankSwitch = 0;
     }
     // DISPLAYS ON MOTER FADERS BLINK
@@ -91,6 +93,9 @@ AutomanFaders.prototype.remote = function(link) {
 }
 AutomanFaders.prototype.hui = function(link) {
     hui = link;
+}
+AutomanFaders.prototype.mf08remote = function(val) {
+    mf08remote = val;
 }
 AutomanFaders.prototype.newFile = function(max) {
         for (var i = 0; i < max; i++) {
@@ -125,32 +130,40 @@ AutomanFaders.prototype.newFile = function(max) {
     }
     */
 AutomanFaders.prototype.snapshot = function() {
-        for (var i = 0; i < 96; i++) {
-            if (this.fader[i].status == STATUS_MAN) {
-                this.fader[i].setStatus(STATUS_AUTO);
-            }
+    for (var i = 0; i < 96; i++) {
+        if (this.fader[i].status == STATUS_MAN) {
+            this.fader[i].setStatus(STATUS_AUTO);
         }
     }
-    /*
-    AutomanFaders.prototype.mf08 = function(data) {
-        var ctrlBankID = (this.cBank * 8) + (data.chnId % 8);
-        if (data.type == "statusSwitch") {
-            this.fader[ctrlBankID].statusFlags(data.status)
-        }
+}
+AutomanFaders.prototype.mf08 = function(data) {
+    var ctrlBankID = (this.cBank * 8) + (data.chnId % 8);
+    if (data.type == "statusSwitch") {
+        this.fader[ctrlBankID].statusFlags(data.status)
     }
-    AutomanFaders.prototype.updateMf08 = function(data) {
-        for (var i = 0; i < 8; i++) {
-            var ctrlBankID = (this.cBank * 8) + (i % 8);
-            var hlBankID = (this.bank * 8) + (i % 8);
-            var hlFader = this.fader[hlBankID];
-            remote.broadcast({
-                "cmd": 0x31, // command for status change - real time data
-                "chn": ctrlBankID, // channel no
-                "status": hlFader.status // 0, 1, 2 or 3
-            });
-        }
+    if (data.type == "touch") {
+        this.fader[ctrlBankID].touchFlags(data.touch);
+        //    console.log(data.touch);
+        // this didnt trigger touch blink
+        // this.fader[ctrlBankID].touch = data.touch;
     }
-    */
+    if (data.type == "move") {
+        this.fader[ctrlBankID].in = data.pos;
+    }
+}
+AutomanFaders.prototype.updateMf08 = function(data) {
+    for (var i = 0; i < 8; i++) {
+        var ctrlBankID = (this.cBank * 8) + (i % 8);
+        var hlBankID = (this.bank * 8) + (i % 8);
+        var hlFader = this.fader[hlBankID];
+        remote.broadcast({
+            "cmd": 0x31, // command for status change - real time data
+            "chn": ctrlBankID, // channel no
+            "status": hlFader.status // 0, 1, 2 or 3
+        });
+    }
+}
+
 function fader(id) {
     var me = this;
     this.base;
@@ -183,6 +196,7 @@ fader.prototype.relay = function(mtc, automation) {
     var hlBank = (this.bank == this.base.bank);
     var cBank = (this.bank == this.base.cBank);
     this.write = 0;
+    this.base.run = run;
 
     // Is this part of the hilighted bank ?
     if (hlBank) {
@@ -205,10 +219,14 @@ fader.prototype.relay = function(mtc, automation) {
         if ((touch && auto) || (this.status == STATUS_WRITE)) {
             this.out = this.base.fader[ctrlBankID].in;
             this.writeLevel = this.base.fader[ctrlBankID].in;
-            if (this.status > STATUS_AUTO) this.write = 1;
+            if (this.status > STATUS_AUTO) {
+                this.write = 1;
+            }
         } else if (run && auto && !touch) {
+            this.write = 0;
             this.out = this.auto;
         } else {
+            this.write = 0;
             this.out = this.in;
         }
         if (this.latch) {
@@ -231,7 +249,6 @@ fader.prototype.relay = function(mtc, automation) {
             } else {
                 this.out = hlFader.auto;
             }
-
             //    console.log("c fader out(" + this.id + ") = " + this.out);
         } else {
             this.out = hlFader.in;
@@ -283,19 +300,22 @@ fader.prototype.relay = function(mtc, automation) {
 fader.prototype.setIn = function(val) {
     //    val = Math.round(((this.in * (FILTER - 1) + val) / FILTER));
     if (val != this.in) {
-        this.in = val;
+        if (this.id < 88 || !mf08remote) {
+            this.in = val;
+        }
     }
 }
 
 fader.prototype.setTouch = function(val) {
-    if (this.touch != val) {
-        this.touch = val;
+        if (this.touch != val) {
+            this.touch = val;
+        }
     }
-}
-
-fader.prototype.setStatus = function(val) {
-    this.status = val;
-}
+    /*
+    fader.prototype.setStatus = function(val) {
+           this.status = val;
+    }
+    */
 
 fader.prototype.setAuto = function(val) {
     if (val > -1) this.auto = val;
@@ -321,7 +341,7 @@ fader.prototype.muteFlags = function(flags) {
 }
 
 fader.prototype.touchFlags = function(flags) {
-    if (flags != 0) {
+    if (flags != 0 && this.id >= 88) {
         this.touch = !(flags >> 1);
         var hlBankID = (this.base.bank * 8) + (this.id % 8);
         this.base.fader[hlBankID].touchBlink = this.touch;
@@ -381,9 +401,13 @@ fader.prototype.statusFlags = function(bits) {
                 else if (hlFader.status === STATUS_AUTO) newStatus = STATUS_MAN;
                 else if (hlFader.status === STATUS_TOUCH) newStatus = STATUS_AUTO;
                 else if (hlFader.status === STATUS_WRITE) {
-                    newStatus = STATUS_TOUCH;
-                    hlFader.latch = 1;
-
+                    if (this.base.run) {
+                        newStatus = STATUS_TOUCH;
+                        hlFader.latch = 1;
+                    } else {
+                        newStatus = STATUS_AUTO;
+                        hlFader.latch = 0;
+                    }
                     // latch
                     // hlFader.auto = this.in;
                 }
@@ -486,9 +510,9 @@ fader.prototype.setStatus = function(status) {
     remote.broadcast({
         "cmd": 0x31, // command for status change - real time data
         "chn": this.id, // channel no
-        "status": this.status // 0, 1, 2 or 3
+        "status": this.status, // 0, 1, 2 or 3,
+        "bank": this.base.bank
     });
-    console.log("send set status")
 }
 
 function getDelta(hui, vca) {

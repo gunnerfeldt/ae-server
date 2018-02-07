@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 
 <head>
-    <title>SW96 Remote (build 0.0.229)</title>
+    <title>SW96 Remote (build 0.0.232)</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="minimum-scale=0.25, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -239,46 +239,61 @@
                     timeCode.min = Math.floor((timeCode.position % hourX) / minX);
                     timeCode.hour = Math.floor(timeCode.position / hourX);
 
-                    if (data.state > 0) {
-                        automation.redRegions = data.redRegions;
-                        timeLine.rePaintFlag = 1;
-                        adjustTimeline();
+                    if (properties.state.activeMode == "mf08") {
+                        if (data.state === 1) {
+                            console.log("MTC Start");
+                            console.log("MTC read by: " + data.sender);
+                            mf08.run = 1;
+                        }
+                        if (data.state === 3) {
+                            console.log("MTC Stop");
+                            mf08.run = 0;
+                        }
                     }
-                    if (data.state === 1) {
-                        console.log("MTC Start");
-                        pageFlipInhibit = 0;
-                        timeLine.rePaintFlag = 1;
-                        console.log("MTC read by: " + data.sender);
-                    }
-                    if (data.state === 3) {
-                        console.log("MTC Stop");
-                    }
+                    if (properties.state.activeMode == "automation") {
+                        if (data.state > 0) {
+                            automation.redRegions = data.redRegions;
+                            timeLine.rePaintFlag = 1;
+                            adjustTimeline();
+                        }
+                        if (data.state === 1) {
+                            console.log("MTC Start");
+                            pageFlipInhibit = 0;
+                            timeLine.rePaintFlag = 1;
+                            console.log("MTC read by: " + data.sender);
+                            mf08.run = 1;
+                        }
+                        if (data.state === 3) {
+                            console.log("MTC Stop");
+                            mf08.run = 0;
+                        }
 
-                    if (data.guiPoints.length) {
+                        if (data.guiPoints.length) {
 
-                        for (var i = 0; i < data.guiPoints.length; i++) {
-                            var guiPoint = data.guiPoints[i];
-                            if (guiPoint.position == 0) {
-                                automation.autoPts[guiPoint.id] = {
-                                    "0": guiPoint.vca
-                                };
-                            } else {
-                                var pushPoint;
-                                if (automation.autoPts[guiPoint.id].hasOwnProperty("" + guiPoint.position + "")) {
-                                    pushPoint = automation.autoPts[guiPoint.id][guiPoint.position];
-                                    delete automation.autoPts[guiPoint.id][guiPoint.position];
-                                } else pushPoint = guiPoint.dropOutVca;
+                            for (var i = 0; i < data.guiPoints.length; i++) {
+                                var guiPoint = data.guiPoints[i];
+                                if (guiPoint.position == 0) {
+                                    automation.autoPts[guiPoint.id] = {
+                                        "0": guiPoint.vca
+                                    };
+                                } else {
+                                    var pushPoint;
+                                    if (automation.autoPts[guiPoint.id].hasOwnProperty("" + guiPoint.position + "")) {
+                                        pushPoint = automation.autoPts[guiPoint.id][guiPoint.position];
+                                        delete automation.autoPts[guiPoint.id][guiPoint.position];
+                                    } else pushPoint = guiPoint.dropOutVca;
 
-                                var nextPos = guiPoint.position + 1;
-                                if (!automation.autoPts[guiPoint.id].hasOwnProperty("" + nextPos + "")) {
-                                    automation.autoPts[guiPoint.id][nextPos] = pushPoint;
+                                    var nextPos = guiPoint.position + 1;
+                                    if (!automation.autoPts[guiPoint.id].hasOwnProperty("" + nextPos + "")) {
+                                        automation.autoPts[guiPoint.id][nextPos] = pushPoint;
+                                    }
+                                    automation.autoPts[guiPoint.id][guiPoint.position] = guiPoint.vca;
                                 }
-                                automation.autoPts[guiPoint.id][guiPoint.position] = guiPoint.vca;
+                                var track = {};
+                                track.track = guiPoint.id;
+                                track.points = automation.autoPts[guiPoint.id];
+                                drawTrackBuffer(track);
                             }
-                            var track = {};
-                            track.track = guiPoint.id;
-                            track.points = automation.autoPts[guiPoint.id];
-                            drawTrackBuffer(track);
                         }
                     }
                     //   properties.dirty = 1; 
@@ -299,8 +314,10 @@
 
                 client.on("trackStatus", function(data) {
                     properties.sessionState.faders[data.chn].status = data.status;
-                    //    setStatus(data.chn, data.status);
-                    //    if (properties.state.activeMode === "mf08") mf08.setStatus(data);
+                    setStatus(data.chn, data.status);
+                    mf08.setStatus(data);
+                    //    console.log("track status")
+                    //    console.log(data)
                 });
                 client.on("trackTouch", function(data) {
                     var bankPage = Math.floor(data.chn / 48);
@@ -453,10 +470,19 @@
                 });
 
                 client.on("mf08", function(data) {
+                    console.log("mf08 data")
                     mf08.update(data);
+                });
+                // this is used !!!
+                client.on("mf08switchBank", function(data) {
+                    //    setBank(data.bank);
+                    mf08.setBank(data);
                 });
                 client.on("mf08status", function(data) {
                     mf08.setStatus(data);
+                });
+                client.on("mf08level", function(data) {
+                    mf08.setLevel(data);
                 });
 
                 files.on("expand", function(data) {
@@ -527,6 +553,7 @@
                 }
                 if (mode === "mf08") {
                     properties.state.activeMode = "mf08";
+                    console.log("Set mf08 Mode");
                     document.getElementById("mainGUI").innerHTML = "";
                     document.getElementById("mainGUI").appendChild(mf08.createMfPanel(990, 534));
                     releaseMenus();

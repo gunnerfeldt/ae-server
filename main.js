@@ -152,7 +152,7 @@ function makeRemoteWindow() {
     win.loadURL(conf.remoteWindow.localUrl);
     win.name = "remoteWindow";
 
-    // win.webContents.openDevTools();
+    //   win.webContents.openDevTools();
 
     win.on("move", function(e) {
         var pos = win.getPosition();
@@ -164,7 +164,7 @@ function makeRemoteWindow() {
 
 function makeSimWindow() {
     console.log("Config file:");
-    console.log(conf);
+    //    console.log(conf);
 
     // HEYYYY!!!
     //    conf.simWindow.show = false;
@@ -178,7 +178,7 @@ function makeSimWindow() {
         y: conf.simWindow.y
     });
 
-    //    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
 
     if (conf.simWindow.show) {
         win.loadURL(conf.simWindow.localUrl);

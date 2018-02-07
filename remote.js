@@ -66,6 +66,7 @@ function Remote() {
                 var callback = {};
                 callback.request = "setMode";
                 callback.mode = wsObject.mode;
+                callback.id = wsObject.id;
                 self.emit("request", callback);
             }
             if (wsObject.cmd == 5) {
@@ -133,14 +134,14 @@ function Remote() {
 
     this.on("request", function(data) {
         // callback from remote GUI   
-        console.log(data);
-
-        if (data.request == "setMode") {
-            var wsObj = {};
-            wsObj.cmd = 0x4
-            wsObj.mode = data.mode;
-            remote.broadcast((wsObj));
-        }
+        /*
+                if (data.request == "setMode") {
+                    var wsObj = {};
+                    wsObj.cmd = 0x4
+                    wsObj.mode = data.mode;
+                    remote.broadcast((wsObj));
+                }
+                */
         if (data.request == "sendSessionData") {
             console.log("Client ID '" + data.id + "' requests full session data");
             this.sendSessionData(data.id);

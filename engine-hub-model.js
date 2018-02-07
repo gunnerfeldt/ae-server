@@ -5,6 +5,7 @@ var USBmodule = require("./hid-model.js");
 var Remote = require("./remote.js");
 var Files = require("./files.js");
 var Hui = require("./hui-model.js");
+var MtcReader = require("./mtc-reader-model.js");
 var Conf = require("./conf.js");
 
 var cv96 = new Cv96Module();
@@ -12,9 +13,14 @@ var automation = new Automation(96);
 var faders = new Faders(96);
 var usbModule = new USBmodule();
 var hui = new Hui();
+var mtcReader = new MtcReader();
 var remote = new Remote();
 var confModule = new Conf();
 var conf;
+var mtcSource = 0;
+
+const CV96_MTC = 1;
+const INTERNAL_MTC = 2;
 
 var qFrame = 0;
 
@@ -51,6 +57,10 @@ function Engine() {
         parseCv96Data(data);
     })
     */
+    // init internal MTC reader
+    cv96.setCallback(automationSync);
+    mtcReader.setCallback(automationSync);
+
     this.go = function(inBuf, outBuf) {
         parseCv96Data(inBuf, outBuf);
     }
@@ -73,21 +83,40 @@ Engine.prototype.getConf = function() {
     return conf;
 }
 Engine.prototype.saveConf = function(conf) {
-    return Files.saveConf(conf);
-}
+        return Files.saveConf(conf);
+    }
+    /*
+            'fps': FPS_ENUM[(buffer[1] & 0xC) >> 2],
+            'qFrame': buffer[1] & 3,
+            'lastPosition': this.lastPosition,
+            'position': buffer[2] + (buffer[3] << 8) + (buffer[4] << 16) + (buffer[5] << 24),
+            'state': this.currentState,
+            'stateFlag': 0
+
+        var STATE_IDLE = 0;
+        var STATE_START = 1;
+        var STATE_RUN = 2;
+        var STATE_STOP = 3;
+        var STATE_JUMP = 4;
+    */
 
 function parseCv96Data(inBuf, outBuf) {
+    // qFrame holds the valur from last call
     clearFlagBits(outBuf[qFrame]);
-    // parse mtc
-    var mtc = cv96.unPackMtcData(inBuf);
-    qFrame = mtc.qFrame;
+
+    if (mtcSource == INTERNAL_MTC) mtcReader.inject(inBuf);
+
+    var qPacket = cv96.unPackMtcData(inBuf);
+    qFrame = qPacket.qFrame;
+
+    mtcReader.setState(qPacket.state);
+    if (qPacket.stateFlag) console.log("State change: " + qPacket.state);
+
     // fill the fader array from incoming data
     for (var i = 0; i < 24; i++) {
-        var chn = (mtc.qFrame * 24) + i;
+        var chn = (qPacket.qFrame * 24) + i;
         // vca level from fader
         faders.fader[chn].setIn(inBuf[8 + (i * 2)] + ((inBuf[9 + (i * 2)] & 3) << 8));
-        // vca level from automation track
-        faders.fader[chn].setAuto(automation.tracks[chn].sync(mtc));
         // Below functions will also switch state
         // status switch press / release
         faders.fader[chn].statusFlags((inBuf[9 + (i * 2)] >> 2) & 3);
@@ -95,26 +124,46 @@ function parseCv96Data(inBuf, outBuf) {
         faders.fader[chn].muteFlags((inBuf[9 + (i * 2)] >> 6) & 3);
         // touch sense / release
         faders.fader[chn].touchFlags((inBuf[9 + (i * 2)] >> 4) & 3);
-        // Route the cv values
-        faders.fader[chn].relay(mtc, automation);
-        // Do automation writes
-        automation.tracks[chn].writeSync(mtc, faders.fader[chn]);
+        // Route the cv values (no position info is needed)
+        faders.fader[chn].relay(qPacket, automation);
         // parse data to binary
         faders.fader[chn].parseToBinary(outBuf);
-        if (faders.fader[chn].latch) faders.fader[chn].latch = 0;
     }
     // do global things once a frame, at the roll over between last and first qFrame
-    if (mtc.qFrame == 3) faders.globalRelay(outBuf, remote.broadcast);
+    if (qPacket.qFrame == 3) faders.globalRelay(outBuf, remote.broadcast);
 
-    mtc.cmd = 0x10;
-    mtc.guiPoints = [];
-    /*
-    mtc.redRegions = automation.getRedRegions(mtc.state);
-    automation.clearRrStop();
-    mtc.guiPoints = automation.getGuiPoints();
-    */
-    remote.broadcast(mtc);
+    // varför blinkar Frans statuslampor?
+    //if (qFrame == 0) console.log("buf id 9: " + outBuf[0][9]);
+
     return outBuf[qFrame];
+}
+
+
+// this is called from both mtc readers every running frame + one stop frame
+function automationSync(timecode) {
+    //    console.log("auto sync at " + timecode.position)
+    // fill the fader array from incoming data
+    for (var qFrame = 0; qFrame < 4; qFrame++) {
+        for (var i = 0; i < 24; i++) {
+            var chn = (qFrame * 24) + i;
+            // vca level from automation track
+            /*
+            setAuto(int)
+            .sync(object) & .writeSync(object)
+                state:
+                position:
+            */
+            faders.fader[chn].setAuto(automation.tracks[chn].sync(timecode));
+            // Do automation writes
+            automation.tracks[chn].writeSync(timecode, faders.fader[chn]);
+            //    if (faders.fader[chn].latch) faders.fader[chn].latch = 0;
+        }
+    }
+    mtcSource = timecode.sender;
+    timecode.cmd = 0x10;
+    timecode.guiPoints = [];
+    remote.broadcast(timecode);
+    //    console.log(timecode);
 }
 
 settings = {
@@ -150,12 +199,28 @@ remote.on("guiStatus", function(data) {
 
 remote.on("request", function(data) {
     // callback from remote GUI   
-    /*
+
     if (data.request == "setMode") {
+        if (data.request == "setMode") {
+            var wsObj = {};
+            wsObj.cmd = 0x4
+            wsObj.mode = data.mode;
+            wsObj.id = data.id;
+
+            if (data.mode == "mf08") {
+                console.log(wsObj);
+                remote.send(wsObj);
+                faders.mf08remote(true);
+                faders.updateMf08();
+            } else {
+                faders.mf08remote(false);
+                remote.broadcast((wsObj));
+            }
+        }
+
     }
-    if (data.request == "setRecall") {
-    }
-    */
+    if (data.request == "setRecall") {}
+
     if (data.request == "newFile") {
         // faders = new Faders(96);
         //    automation = new Automation(96);
@@ -167,8 +232,8 @@ remote.on("request", function(data) {
         //    Files.packAutomationData(automation)
         remote.newFile();
         remote.sendSessionData();
-        console.log("autoPts 0");
-        console.log(automation.tracks[0].autoPts);
+        //   console.log("autoPts 0");
+        //    console.log(automation.tracks[0].autoPts);
 
 
     }
@@ -212,4 +277,8 @@ remote.on("request", function(data) {
         faders.snapshot();
         remote.sendSessionData();
     }
+});
+
+remote.on("mf08", function(data) {
+    faders.mf08(data);
 });

@@ -174,7 +174,6 @@ exports.openConf = function() {
             console.log("conf file loaded");
             return 1;
         }
-
     }
     console.log("no conf file");
     return 0;

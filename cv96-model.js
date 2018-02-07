@@ -20,13 +20,18 @@ var STATE_START = 1;
 var STATE_RUN = 2;
 var STATE_STOP = 3;
 var STATE_JUMP = 4;
-
-var STATE_IDLE = 0;
-var STATE_START = 1;
-var STATE_RUN = 2;
-var STATE_STOP = 3;
-var STATE_JUMP = 4;
-
+var timecode = {
+    'fps': 0,
+    'qFrame': 0,
+    'lastPosition': 0,
+    'position': 0,
+    'state': 0,
+    'stateFlag': 0,
+    sender: 1,
+    locked: 0
+};
+var cv96midiCheck = false;
+var automationSync;
 
 function Cv96object() {
     var self = this;
@@ -36,62 +41,63 @@ function Cv96object() {
     this.lastPosition = 0;
 }
 
-Cv96object.prototype.unPackMtcData = function unPackMtcData(buffer) {
+Cv96object.prototype.setCallback = function(automationSyncFunc) {
+    automationSync = automationSyncFunc;
+}
 
+Cv96object.prototype.unPackMtcData = function unPackMtcData(buffer) {
     // 3 flags
     // 01 - start
     // 10 - stop
     // 11 - jump
     var eventFlags = (buffer[1] & MTC_EVENT) >> 4;
-    var mtc = {
-        'fps': FPS_ENUM[(buffer[1] & 0xC) >> 2],
-        'qFrame': buffer[1] & 3,
-        'lastPosition': this.lastPosition,
-        'position': buffer[2] + (buffer[3] << 8) + (buffer[4] << 16) + (buffer[5] << 24),
-        'state': this.currentState,
-        'stateFlag': 0
-    };
+    timecode.fps = FPS_ENUM[(buffer[1] & 0xC) >> 2];
+    timecode.qFrame = buffer[1] & 3;
+    timecode.lastPosition = timecode.position;
+    timecode.position = buffer[2] + (buffer[3] << 8) + (buffer[4] << 16) + (buffer[5] << 24);
+    timecode.stateFlag = 0;
 
-    // Determine this frame's state (only if it's qFrame 0)
-    // Because state must maintain thru all qframes
-    if (mtc.qFrame == 0) {
-        // there must be a buffer of the last position before dropout if caused by mtc jump or stop
-        this.lastPosition = mtc.position;
-        var newState = this.currentState;
-        if (eventFlags !== 0) {
-            if (eventFlags == 1) {
-                newState = STATE_START;
-            };
-            if (eventFlags == 2) {
-                newState = STATE_STOP;
-            };
-            if (eventFlags == 4) {
-                this.previousState = this.currentState;
-                newState = STATE_JUMP
-            };
-        } else {
-            // rollover state from start, stop & jump
-            if (this.currentState == STATE_START) {
-                newState = STATE_RUN;
+    if (timecode.qFrame == 0) {
+        let cState = timecode.state;
+        if (timecode.state == STATE_IDLE) {
+            if (eventFlags == 1) { // run
+                timecode.state = STATE_START;
             }
-            if (this.currentState == STATE_STOP) {
-                newState = STATE_IDLE;
+        } else if (timecode.state == STATE_START) {
+            timecode.state = STATE_RUN;
+        } else if (timecode.state == STATE_RUN) {
+            if (eventFlags == 2) { // stop
+                timecode.state = STATE_STOP;
+            } else if (eventFlags == 4) {
+                timecode.state = STATE_JUMP;
             }
-            if (this.currentState == STATE_JUMP) {
-                newState = this.previousState;
-            }
+        } else if (timecode.state == STATE_STOP) {
+            timecode.state = STATE_IDLE;
+        } else if (timecode.state == STATE_JUMP) {
+            timecode.state = STATE_RUN;
         }
-        if (newState != this.currentState) {
-            this.currentState = newState;
-            mtc.stateFlag = 1;
-            this.stateFlag = 1;
-        } else {
-            mtc.stateFlag = 0;
-            this.stateFlag = 0;
+        if (cState != timecode.state) {
+            timecode.stateFlag = 1;
         }
-        mtc.state = this.currentState;
+        if (timecode.lastPosition != timecode.position) automationSync(timecode);
+
     }
-    mtc.stateFlag = this.stateFlag;
-    return mtc;
+    return timecode;
+}
 
+Cv96object.prototype.checkForMtc = function(buffer) {
+    // 3 flags
+    // 01 - start
+    // 10 - stop
+    // 11 - jump
+
+    var eventFlags = (buffer[1] & MTC_EVENT) >> 4;
+    var fps = FPS_ENUM[(buffer[1] & 0xC) >> 2];
+    if (eventFlags > 0 && eventFlags != 0x2) {
+        cv96midiCheck = true;
+        return true;
+        console.log("ef: " + eventFlags)
+    }
+    cv96midiCheck = false;
+    return false;
 }

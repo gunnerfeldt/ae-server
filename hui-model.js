@@ -39,6 +39,8 @@ function Hui(inCnt, outCnt) {
         var byteNo = (message[1] & 0x20) >> 5;
         var chn = (message[1] & 0x07);
 
+        console.log("mtc: " + message[0] + ", " + message[0] + ", " + message[0]);
+
         if (sysEx == 0xb0 && region < 0x8) {
             if (!byteNo) {
                 HUIin[HUIport][chn] = (message[2] & 0xFE) << 3;

@@ -238,6 +238,7 @@ TrackClass.prototype.recStateMachine = function(mtc, fader) {
     else if (this.recState == REC_STATE_WRITE && fader.write != 1) {
         if (fader.latch) {
             this.recState = REC_STATE_LATCH;
+            fader.latch = 0;
         } else this.recState = REC_STATE_DROP_OUT;
     } else if (this.recState == REC_STATE_WRITE && mtc.state != STATE_RUN) this.recState = REC_STATE_DROP_OUT;
     return this.recState;
